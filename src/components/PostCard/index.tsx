@@ -7,9 +7,10 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import ShareIcon from '@mui/icons-material/Share';
 import { SxProps } from '@mui/material';
 import CardContainer from '@/components/CardContainer';
-import CardHeader from '@/components/CardContainer/components/CardHeader';
-import CommentList from './components/CommentList';
-import PostBottomInf from './components/PostBottomInf';
+import CardHeader from '@/components/CardContainer/CardHeader';
+import CommentList from './CommentList';
+import PostBottomInf from './PostBottomInf';
+import { twMerge } from 'tailwind-merge';
 
 
 export default function PostCard({ showBottomActions = true, showBottomInf = true, ...props }: PostCardProps) {
@@ -30,7 +31,7 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
           {...{ avatarSxProps }}
           avatarImage={props.owner.profileImageUrl || props.owner.name}
           heading={props.owner.username}
-          headingClassName={props.sharedPost ? "text-sm" : ""}
+          headingClassName={twMerge("font-semibold", props.sharedPost ? "text-sm" : "")}
           href={"/in/profile/" + props.owner.username}
           showDate={!props.sharedPost}
           ISODate={props.createdAt}
@@ -45,6 +46,9 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
               onClick: () => { }
             },
           ]}
+          leftComponents={
+            props.sharedPost && (<p className='ml-2'>shared the {props.sharedPost.owner.username}&apos;s post</p>)
+          }
         />
       )}
 

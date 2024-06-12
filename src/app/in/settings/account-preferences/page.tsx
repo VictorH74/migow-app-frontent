@@ -1,4 +1,8 @@
 import React from 'react';
+import ConfigTile from '../components/ConfigTile';
+import DarkModeConfig from './DarkModeConfig';
+import SoundEffectsConfig from './SoundEffectsConfig';
+import OnlineUsersCountLimitConfig from './OnlineUsersCountLimitConfig';
 
 export default function AccountPreferencesPage() {
 
@@ -9,8 +13,10 @@ export default function AccountPreferencesPage() {
 
   return (
     <div className='w-full'>
-      <main className='bg-white shadow-lg mx-auto h-full w-[780px]'>
-
+      <main className='bg-white shadow-lg mx-auto h-full w-[780px] divide-y-[2px] divide-gray-500'>
+        <DarkModeConfig />
+        <SoundEffectsConfig />
+        <OnlineUsersCountLimitConfig />
       </main>
     </div>
   );

@@ -5,13 +5,16 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Avatar from '@mui/material/Avatar';
 import { formatISODate, stringAvatar } from '@/util/functions';
+import { useRouter } from 'next/navigation';
 
 
 export default function NotificationMenu(props: NotificationMenuProps) {
   const hook = useNotificationMenu(props);
+  const router = useRouter()
 
   return (
     <Menu
+      disableScrollLock
       id="notification-menu"
       anchorEl={props.popup.anchorEl}
       open={props.popup.open}
@@ -54,6 +57,17 @@ export default function NotificationMenu(props: NotificationMenuProps) {
                 <p className='text-sm' >{formatISODate(notfication.createdAt)}</p>
               </MenuItem>
             ))}
+            <MenuItem
+              onClick={() => {
+                router.replace("/in/settings/notifications")
+                props.popup.handleClose()
+              }}
+            >
+              <p className='rounded-md w-full py-2 text-center bg-gray-300 text-gray-700 font-semibold'>
+                Notification Settings
+              </p>
+
+            </MenuItem>
           </>)
         }
       </div>

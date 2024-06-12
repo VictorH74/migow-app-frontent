@@ -4,6 +4,7 @@ import { postsMock } from '@/mockData';
 
 
 export default function PostsPage() {
+  
   return (
     <div className='mt-2'>
       <main className='flex flex-col gap-2 items-center'>

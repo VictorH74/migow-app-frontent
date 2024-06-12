@@ -1,6 +1,32 @@
 import { UserEventEnum, VisibilityEnum } from "./enums";
 import { ISODateType } from "./types";
 
+export interface ReplyMsgType {
+    id: string;
+    sender: string;
+    content?: string
+    media?: MediaInterface
+};
+
+export interface MessageInterface {
+    chatId: string
+    id: number,
+    // TODO: create dto to this sender
+    sender: string;
+    content?: string
+    media?: MediaInterface
+    isRead?: boolean
+    replyMsg: ReplyMsgType | null;
+    sentAt: ISODateType;
+}
+
+export interface ChatInterface {
+    id: string
+    users: [string, string]
+    createdAt: ISODateType
+    recentMessage?: Omit<MessageInterface, "id">;
+}
+
 // users service
 export interface UserInterface {
     id: string,
@@ -58,6 +84,7 @@ export interface PostInterface extends UserGenericProperty {
 // posts service
 // @unnique(userId, targetId)
 export interface ReactionInterface extends UserGenericProperty {
+    // id: {user: UserInterface, targetId: string}
     targetId: string, // post or comment
 }
 
@@ -69,6 +96,11 @@ export interface CommentInterface {
     post: PostInterface
     content: string
     createdAt: ISODateType
+
+    // TODO: include properties on returned CommentDTO
+    reactionCount: number
+    replyCommentCount: number
+
 }
 
 // posts service
@@ -79,6 +111,9 @@ export interface ReplayCommentInterface {
     comment: CommentInterface
     content: string
     createdAt: ISODateType
+
+    // TODO: include properties on returned ReplyCommentDTO
+    reactionCount: number
 }
 
 // user event service

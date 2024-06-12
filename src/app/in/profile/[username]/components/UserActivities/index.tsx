@@ -2,10 +2,11 @@
 import React from 'react';
 import useUserActivities, { UserActivitiesProps } from "./useUserActivities"
 import CardContainer from '@/components/CardContainer';
-import CardHeader from '@/components/CardContainer/components/CardHeader';
+import CardHeader from '@/components/CardContainer/CardHeader';
 import PostCard from '@/components/PostCard';
 import { UserEventEnum } from '@/enums';
 import { twMerge } from 'tailwind-merge';
+import SymetricHorizontalButtonList from '@/components/SymetricHorizontalButtonList';
 
 
 
@@ -18,18 +19,7 @@ export default function UserActivities(props: UserActivitiesProps) {
         <h2>
           Activities
         </h2>
-        <div className='flex gap-1 overflow-hidden rounded-2xl'>
-          {hook.btnData.map(btn => (
-            <button
-              key={btn.label}
-              ref={btn.ref}
-              onClick={btn.onClick}
-              className={twMerge('p-2 bg-gray-500 text-white opacity-0 duration-200  hover:bg-gray-400', btn.selected ? "bg-gray-400" : "")}
-            >
-              {btn.label}
-            </button>
-          ))}
-        </div>
+        <SymetricHorizontalButtonList btnData={hook.btnData} />
       </div>
 
       <div>

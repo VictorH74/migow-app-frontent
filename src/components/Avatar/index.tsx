@@ -15,7 +15,8 @@ export default function Avatar(props: AvatarProp) {
         try {
             new URL(props.image)
             return ({
-                src: props.image
+                src: props.image,
+                sx: props.avatarSxProps
             })
         } catch (e) {
             return stringAvatar(props.image!, props.avatarSxProps)

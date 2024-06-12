@@ -2,7 +2,7 @@
 // temp 
 
 import { URL } from "url"
-import { ActivityInterface, CommentInterface, ReplayCommentInterface, NotificationInterface, PostInterface, UserInterface, OnlineUserInterface } from "./interfaces"
+import { ActivityInterface, CommentInterface, ReplayCommentInterface, NotificationInterface, PostInterface, UserInterface, OnlineUserInterface, RetrievedUserType, ChatInterface, MessageInterface } from "./interfaces"
 import { UserEventEnum } from "./enums"
 
 
@@ -66,13 +66,112 @@ export const usersMock: UserInterface[] = [
   },
 ]
 
+
+export const chatsMock: ChatInterface[] = [
+  {
+    createdAt: "",
+    id: "vvv-aaa",
+    users: ["vvv", "aaa"],
+  },
+  {
+    createdAt: "",
+    id: "vvv-bbb",
+    users: ["vvv", "bbb"],
+    recentMessage: {
+      chatId: "vvv-bbb",
+      sender: "bbb",
+      sentAt: "",
+      replyMsg: null,
+      content: "Hello!"
+    }
+  },
+  {
+    createdAt: "",
+    id: "vvv-ccc",
+    users: ["vvv", "ccc"],
+  },
+  {
+    createdAt: "",
+    id: "vvv-ddd",
+    users: ["vvv", "ddd"],
+  },
+]
+
+export const messagesMock: MessageInterface[] = [
+  {
+    chatId: "vvv-bbb",
+    sender: "bbb",
+    replyMsg: null,
+    sentAt: "",
+    content: "Hello!",
+    id: 0
+  }
+]
+
+export const peoplesModalUserMock: RetrievedUserType[] = [
+  {
+    profileImageUrl: "https://th.bing.com/th/id/OIP.h04o3WE6Gle5wjqYLzhATwHaHa?pid=ImgDet&w=198&h=198&c=7",
+    id: "aaa",
+    name: "Kent Dodds",
+    username: "kent_D88",
+    isFollowed: true
+  },
+  {
+    profileImageUrl: "https://th.bing.com/th/id/OIP.kLuVl7_2soHqjgecM56X2AHaLL?w=202&h=305&c=7&r=0&o=5&pid=1.7",
+    id: "bbb",
+    name: "Jed Watson",
+    username: "j_N77",
+    isFollowed: false
+  },
+  {
+    id: "ccc",
+    name: "Tim Neutkens",
+    username: "tim_N76",
+    isFollowed: false
+  },
+  {
+    id: "ddd",
+    profileImageUrl: "https://fastly.picsum.photos/id/454/200/200.jpg?hmac=N13wDge6Ku6Eg_LxRRsrfzC1A4ZkpCScOEp-hH-PwHg",
+    name: "Nikolas Teslas",
+    username: "nickT778",
+    isFollowed: true
+  },
+  {
+    id: "eee",
+    name: "Nikolas Teslas",
+    username: "nickT778",
+    isFollowed: true
+  },
+  {
+    profileImageUrl: "https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1",
+    id: "fff",
+    name: "Nikolas Teslas",
+    username: "nickT778",
+    isFollowed: false
+  },
+  {
+    id: "ggg",
+    name: "Nikolas Teslas",
+    username: "nickT778",
+    isFollowed: false
+  },
+  {
+    id: "hhh",
+    name: "Nikolas Teslas",
+    username: "nickT778",
+    isFollowed: false
+  },
+]
+
 export const onlineUsersMock: OnlineUserInterface[] = [
   {
+    profileImageUrl: "https://th.bing.com/th/id/OIP.h04o3WE6Gle5wjqYLzhATwHaHa?pid=ImgDet&w=198&h=198&c=7",
     id: "aaa",
     name: "Kent Dodds",
     username: "kent_D88",
   },
   {
+    profileImageUrl: "https://th.bing.com/th/id/OIP.kLuVl7_2soHqjgecM56X2AHaLL?w=202&h=305&c=7&r=0&o=5&pid=1.7",
     id: "bbb",
     name: "Jed Watson",
     username: "j_N77",
@@ -84,6 +183,7 @@ export const onlineUsersMock: OnlineUserInterface[] = [
   },
   {
     id: "ddd",
+    profileImageUrl: "https://fastly.picsum.photos/id/454/200/200.jpg?hmac=N13wDge6Ku6Eg_LxRRsrfzC1A4ZkpCScOEp-hH-PwHg",
     name: "Nikolas Teslas",
     username: "nickT778",
   },
@@ -93,6 +193,7 @@ export const onlineUsersMock: OnlineUserInterface[] = [
     username: "nickT778",
   },
   {
+    profileImageUrl: "https://th.bing.com/th/id/R.da2e546841da40cdcf60061743233500?rik=IeO7Sr%2fkUW54wQ&riu=http%3a%2f%2fwww.venmond.com%2fdemo%2fvendroid%2fimg%2favatar%2fbig.jpg&ehk=JihI5nQ0BOd0W%2bZVhtIWmqwac0NMyRMOV7%2bzryywg%2fg%3d&risl=&pid=ImgRaw&r=0&sres=1&sresct=1",
     id: "fff",
     name: "Nikolas Teslas",
     username: "nickT778",
@@ -220,6 +321,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice bro!!",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[1]
   },
   {
@@ -227,6 +330,8 @@ export const commentsMock: CommentInterface[] = [
     content: "yes",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -234,6 +339,8 @@ export const commentsMock: CommentInterface[] = [
     content: "very good",
     post: postsMock[0],
     createdAt: "2024-05-14T23:01:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -241,6 +348,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice!!!",
     post: postsMock[0],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[2]
   },
   {
@@ -248,6 +357,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice bro!!",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[1]
   },
   {
@@ -255,6 +366,8 @@ export const commentsMock: CommentInterface[] = [
     content: "yes",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -262,6 +375,8 @@ export const commentsMock: CommentInterface[] = [
     content: "very good",
     post: postsMock[0],
     createdAt: "2024-05-14T23:01:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -269,6 +384,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice!!!",
     post: postsMock[0],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[2]
   },
   {
@@ -276,6 +393,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice bro!!",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[1]
   },
   {
@@ -283,6 +402,8 @@ export const commentsMock: CommentInterface[] = [
     content: "yes",
     post: postsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -290,6 +411,8 @@ export const commentsMock: CommentInterface[] = [
     content: "very good",
     post: postsMock[0],
     createdAt: "2024-05-14T23:01:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -297,6 +420,8 @@ export const commentsMock: CommentInterface[] = [
     content: "nice!!!",
     post: postsMock[0],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[2]
   },
   {
@@ -304,6 +429,8 @@ export const commentsMock: CommentInterface[] = [
     content: "awnsome!",
     post: postsMock[1],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[0],
   },
   {
@@ -311,6 +438,8 @@ export const commentsMock: CommentInterface[] = [
     content: "fascinant",
     post: postsMock[1],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[3]
   },
   {
@@ -318,6 +447,8 @@ export const commentsMock: CommentInterface[] = [
     content: "GG",
     post: postsMock[1],
     createdAt: "2024-05-14T24:55:00.098Z",
+    reactionCount: 0,
+    replyCommentCount: 0,
     user: usersMock[2]
   },
 ]
@@ -328,7 +459,8 @@ export const commentRepliesMock: ReplayCommentInterface[] = [
     user: usersMock[1],
     comment: commentsMock[0],
     createdAt: "2024-05-14T22:55:00.098Z",
-    content: "Comentário de resposta"
+    content: "Comentário de resposta",
+    reactionCount: 0,
   },
 ]
 

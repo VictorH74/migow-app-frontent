@@ -1,6 +1,5 @@
 "use client"
 
-import { GRADIENT_TEXT_CLASSNAME } from "@/util/constants"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React from "react"
@@ -36,7 +35,7 @@ export default function NavSidebar() {
                             href={link.href}
                         >
                             <p
-                                className={twMerge("text-center p-2 my-1 text-lg font-semibold text-gray-500", isActive(link.href) ? GRADIENT_TEXT_CLASSNAME : "")}
+                                className={twMerge("text-center p-2 my-1 text-lg font-semibold text-gray-500", isActive(link.href) ? "text-gradient" : "")}
                             >
                                 {link.label}
                             </p>

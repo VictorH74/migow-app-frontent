@@ -1,6 +1,5 @@
 import { Metadata } from "next";
-import Header from "@/components/Header";
-import OnlineUsersSidebar from "@/components/OnlineUsersSidebar";
+import ClientSideInLayout from "@/components/ClientSideInLayout";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -14,11 +13,9 @@ export default function InLayout({
 }>) {
 
     return (
-        <>
-            <Header />
+        <ClientSideInLayout>
             {children}
-            <OnlineUsersSidebar />
-        </>
+        </ClientSideInLayout>
     )
 
 }

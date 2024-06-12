@@ -3,7 +3,6 @@ import { Metadata } from "next";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
-import { GRADIENT_TEXT_CLASSNAME } from "@/util/constants";
 import NavSidebar from "./components/NavSidebar";
 
 export const metadata: Metadata = {

@@ -26,12 +26,12 @@ const currentUser: UserInterface = {
 export default function ProfilePage({ params }: { params: { username: string } }) {
 
   // Unique data aproach
-  // const profileData = await api.getProfileData(visitorId=currentUser.id)
+  // const profileData = await clientHTTP.getProfileData(visitorId=currentUser.id)
   // const {ownerUser, ownerUserFollowed, commonFollowersCount, firstTwoFollowers, profileSettings } = profileData
 
   // TODO: fetch owner user from api
   // WITH CLIENTHTTP
-  // const ownerUser = await api.getOwnerUser(params.username)
+  // const ownerUser = await clientHTTP.findUserByUsername(params.username)
   const ownerUser = usersMock.find(user => user.username === params.username)
 
   if (!ownerUser) return <div>User not found</div>
@@ -41,12 +41,12 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
   // TODO: if !isOwner -> check if user has been blocked from the isOwner
   // WITH CLIENTHTTP
-  // const currentUserBlocked = (await api.checkUserBlock(ownerUser.id, currentUser.id)).status
+  // const currentUserBlocked = (await clientHTTP.checkUserBlock(ownerUser.id, currentUser.id)).status
   // if (currentUserBlocked) <div>{ownerUser.username has blobked you!}</div>
 
 
   // WITH CLIENTHTTP
-  // const profileSettings = await api.getProfileSettings(ownerUser.id)
+  // const profileSettings = await clientHTTP.getProfileSettings(ownerUser.id)
   // temp
   const profileSettings: ProfileSettingsInterface = {
     id: "aaa",
@@ -57,7 +57,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
   // TODO: if !isOwner AND 1+ user followers in ownerUser followers -> fetch the firsts two folllowers profile img and followers count - 2
   // WITH CLIENTHTTP
-  // const ownerUserFollowed = !isOwner ? false : (await api.userFollowedBy(ownerUser.id, currentUser.id)).followed
+  // const ownerUserFollowed = !isOwner ? false : (await clientHTTP.checkIfUserIsFollowedByUserId(ownerUser.id, currentUser.id)).followed
   // temp
   const ownerUserFollowed = !isOwner && !!currentUser.followers.find(u => u.id === ownerUser.id)
   
@@ -65,7 +65,7 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
   // TODO: Create Follow table and indexes to performance query
   // WITH CLIENTHTTP
-  // const commonFollowersCount = await api.getCommonFollowers(currentUser.id, ownerUser.id)
+  // const commonFollowersCount = await clientHTTP.getCommonFollowers(currentUser.id, ownerUser.id)
   // temp
   const commonFollowersCount = currentUser.followers.reduce((total, u, index) => {
     if (index < 2) {

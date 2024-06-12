@@ -74,24 +74,6 @@ export default function useUserActivities(props: UserActivitiesProps) {
   ], [activityQuery])
 
   React.useEffect(() => {
-    const refs = [allBtnRef, postsBtnRef, commentsBtnRef, reactionsBtnRef]
-
-    if (refs.every(ref => !!ref.current)) {
-      const btnWidths = refs.map(r => r.current!.getBoundingClientRect().width)
-      const maxWidth = Math.max(...btnWidths)
-
-      let index = 0
-      for (const ref of refs) {
-        ref.current!.style.width = maxWidth + "px"
-        setTimeout(() => {
-          ref.current!.style.opacity = "1"
-        }, index * 80)
-        index++
-      }
-    }
-  }, [btnData])
-
-  React.useEffect(() => {
     // TODO: fetch user activities in date order while display loading
     // WITH CLIENTHTTP
     /*
