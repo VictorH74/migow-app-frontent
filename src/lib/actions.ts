@@ -21,8 +21,6 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
         }
     */
 
-    throw new Error("aaa")
-
     await new Promise<void>((res) => {
         setTimeout(res, 2000);
     })
