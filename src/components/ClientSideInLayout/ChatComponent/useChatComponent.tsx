@@ -9,7 +9,7 @@ import { chatsMock } from "@/mockData";
 export const fixedChatListSidebarWidth = 400
 export const openChatBoxHeight = 600
 export const openChatBoxWidth = 500
-export const closedChatBoxHeight = 60
+export const closedChatBoxHeight = 50
 export const closedChatBoxWidth = 230
 export const chatBoxListContainerGap = 10
 

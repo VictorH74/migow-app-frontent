@@ -2,6 +2,7 @@
 "use client"
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 export default function useHeader() {
   const headerRef = React.useRef<HTMLHeadElement | null>(null)
@@ -36,7 +37,21 @@ export default function useHeader() {
     // logout user
     //...
 
-    router.replace("/login")
+    try {
+      await fetch('../api/auth/signout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+
+      router.replace("/login")
+
+    } catch (e) {
+      alert('Error')
+      console.error(e)
+    }
+
+
+
   }
 
   return {
