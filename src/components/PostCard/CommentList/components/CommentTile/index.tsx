@@ -20,13 +20,13 @@ export default function CommentTile(props: CommentTileProps) {
         <li className="px-4">
             <div className="flex">
                 <Avatar
-                    image={props.user.profileImageUrl || props.user.name}
+                    image={props.owner.profileImageUrl || props.owner.name}
                     avatarSxProps={commentAvatarSxProps}
                 />
                 <div className="bg-gray-200 px-2 pb-2 rounded-md w-full">
                     <div className="flex items-center">
                         <p className="leading-[35px] font-semibold">
-                            {props.user.username}
+                            {props.owner.username}
                         </p>
                         <DisplayISODate ISODate={props.createdAt} />
                     </div>

@@ -23,7 +23,7 @@ interface OnlineUsersSidebarProps {
     openPeoplesModalInFollowers(): void
 }
 
-// TODO: Include followers list with online users on top
+// TODO: Include friendships list with online users on top
 export default function OnlineUsersSidebar(props: OnlineUsersSidebarProps) {
     const hook = useOnlineUsersSidebar();
     const popup = usePopup()
@@ -43,7 +43,7 @@ export default function OnlineUsersSidebar(props: OnlineUsersSidebarProps) {
 
     return (
         <div
-            id="online-followers"
+            id="online-friendships"
             style={{
                 right: 20 + (props.incrementRight ? innerWidth - document.documentElement.clientWidth : 0)
             }}
@@ -53,8 +53,8 @@ export default function OnlineUsersSidebar(props: OnlineUsersSidebarProps) {
                 <React.Fragment key={user.id}>
                     <button
                         className="relative"
-                        id="online-followers-button"
-                        aria-controls={popup.open ? 'online-followers-menu' : undefined}
+                        id="online-friendships-button"
+                        aria-controls={popup.open ? 'online-friendships-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={popup.open ? 'true' : undefined}
                         onClick={popup.handleClick}
@@ -68,12 +68,12 @@ export default function OnlineUsersSidebar(props: OnlineUsersSidebarProps) {
                     </button>
                     <Menu
                         disableScrollLock
-                        id="online-followers-menu"
+                        id="online-friendships-menu"
                         anchorEl={popup.anchorEl}
                         open={popup.open}
                         onClose={popup.handleClose}
                         MenuListProps={{
-                            'aria-labelledby': 'online-followers-button',
+                            'aria-labelledby': 'online-friendships-button',
                         }}
                         anchorOrigin={{
                             vertical: 'center',

@@ -1,14 +1,14 @@
 export enum VisibilityEnum {
-    PUBLIC,
-    FOLLOWERS,
-    NOBODY
+    PUBLIC=1,
+    FOLLOWERS=2,
+    NOBODY=3
 }
 
 export enum UserEventEnum {
-    COMMENT_REPLAY=0,
-    NEW_POST=1,
-    COMMENT_POST=2,
-    REACT_COMMENT=3,
-    REACT_POST=4,
-    SHARE_POST=5
+    COMMENT_REPLAY=1,
+    NEW_POST=2,
+    COMMENT_POST=3,
+    REACT_COMMENT=4,
+    REACT_POST=5,
+    SHARE_POST=6
 }

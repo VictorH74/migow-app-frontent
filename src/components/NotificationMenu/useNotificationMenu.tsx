@@ -11,12 +11,12 @@ export interface NotificationMenuProps {
 }
 
 const notificationSegment: Record<UserEventEnum, string> = {
-  0: `replied to {{finalUserName}}'s comment`,
-  1: "posted something",
-  2: `commented on {{finalUserName}}'s post`,
-  3: `reacted to {{finalUserName}}'s comment`,
-  4: `reacted to {{finalUserName}}'s post`,
-  5: `shared {{finalUserName}}'s post`
+  1: `replied to {{finalUserName}}'s comment`,
+  2: "posted something",
+  3: `commented on {{finalUserName}}'s post`,
+  4: `reacted to {{finalUserName}}'s comment`,
+  5: `reacted to {{finalUserName}}'s post`,
+  6: `shared {{finalUserName}}'s post`
 }
 
 export default function useNotificationMenu({ popup }: NotificationMenuProps) {

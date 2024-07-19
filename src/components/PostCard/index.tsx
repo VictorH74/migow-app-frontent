@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { use } from 'react';
 import usePostCard, { PostCardProps } from "./usePostCard"
 import Image from 'next/image';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
@@ -71,18 +71,19 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
           </>
         )}
 
-        {(showBottomInf || (!!props.sharedPost && !!props.text)) && (
+        <div className='bg-gray-500 h-[1px] mx-4' />
+        {/* {(showBottomInf || (!!props.sharedPost && !!props.text)) && (
           <>
             <PostBottomInf
               recoveredAllComments={hook.recoveredAllComments}
-              reactionCount={props.reactionCount}
+              reactionCount={props.reactCount}
               commentCount={props.commentCount}
               shareCount={props.shareCount}
               loadComments={hook.loadComments}
             />
             <div className='bg-gray-500 h-[1px] mx-4' />
           </>
-        )}
+        )} */}
 
         {(showBottomActions || (!!props.sharedPost && !!props.text)) && (
           <div className='flex justify-center gap-1 px-4 mt-2'>
@@ -90,35 +91,47 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
               [
                 {
                   Icon: AddReactionIcon,
+                  count: props.reactCount,
                   onClick: () => { },
                   label: "Add Reaction"
                 },
                 {
                   Icon: AddCommentIcon,
+                  count: props.commentCount,
                   onClick: () => { },
                   label: "Add Comment"
                 },
                 {
                   Icon: ShareIcon,
+                  count: props.shareCount,
                   onClick: () => { },
                   label: "Share"
                 },
               ].map(btnData => (
-                <button key={btnData.label} className='flex gap-2 items-center text-gray-600 font-semibold hover:bg-gray-200 duration-200 px-5 py-2 rounded' >
+                <button key={btnData.label} className='flex gap-2 items-center text-gray-600 font-semibold hover:bg-gray-200 duration-200 px-5 py-2 rounded relative mb-3' >
                   <btnData.Icon className='text-3xl' />
                   <span>{btnData.label}</span>
+                  <span className='absolute w-10 -bottom-3 left-1/2 -translate-x-1/2 right-2 rounded-xl bg-cyan-400 text-white text-sm'>{btnData.count}</span>
                 </button>
               ))
             }
           </div>
         )}
 
-        <CommentList
-          commentCount={props.commentCount}
-          comments={hook.comments}
-          highlightReplayComment={props.highlightReplayComment}
-          loadComments={hook.loadComments}
-        />
+        {props.commentCount > 0 && hook.comments.length === 0 ? (
+          <button className='bg-gradient text-white p-1 font-semibold text-center' onClick={hook.loadComments}>
+            Load Comments
+          </button>
+        ) : (
+          <CommentList
+            commentCount={props.commentCount}
+            comments={hook.comments}
+            highlightReplayComment={props.highlightReplayComment}
+            loadComments={hook.loadComments}
+          />
+        )}
+
+
 
       </div>
     </CardContainer>

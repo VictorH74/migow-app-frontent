@@ -2,13 +2,10 @@
 import React from "react";
 import useClientSideInLayout from "./useClientSideInLayout";
 import LoadingLazyComponent from "../LoadingLazyComponent";
-import { createPortal } from "react-dom";
-import ChatBox from "./ChatBox";
 import OnlineUsersSidebar from "./OnlineUsersSidebar";
 import Header from "./Header";
-import ChatBoxList from "./ChatBoxList";
-import FixedChatListSidebar from "./FixedChatListSidebar";
 import ChatComponent from "./ChatComponent";
+import Providers from "@/components/Providers";
 
 const PeoplesModal = React.lazy(() => import('./PeoplesModal'));
 const AddNewPostModal = React.lazy(() => import('./AddNewPostModal'));
@@ -20,7 +17,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
     const hook = useClientSideInLayout()
 
     return (
-        <>
+        <Providers>
             <Header navButtons={hook.navButtons} />
             {props.children}
             <OnlineUsersSidebar
@@ -40,7 +37,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
                 showFixedChatListSidebar={hook.showFixedChatListSidebar}
                 onClose={() => hook.setShowFixedChatListSidebar(false)}
             />
-        </>
+        </Providers>
     )
 
 }

@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
 export default function UserProfileImgConfig() {
     const [value, setValue] = React.useState(0)
     const allOpButtonRef = React.useRef<HTMLButtonElement>(null);
-    const followersOpButtonRef = React.useRef<HTMLButtonElement>(null);
+    const friendshipsOpButtonRef = React.useRef<HTMLButtonElement>(null);
     const nobodyOpButtonRef = React.useRef<HTMLButtonElement>(null);
 
     const btnData = React.useMemo(() => [
@@ -17,7 +17,7 @@ export default function UserProfileImgConfig() {
             selected: value === 0
         },
         {
-            ref: followersOpButtonRef,
+            ref: friendshipsOpButtonRef,
             label: "Followers",
             onClick: () => setValue(1),
             selected: value === 1

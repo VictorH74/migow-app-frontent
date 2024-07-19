@@ -22,7 +22,7 @@ const currentUser: UserInterface = {
   username: "vyctor74",
   createdAt: new Date().toISOString(),
   email: "victor@emai.com",
-  followers: []
+  friendships: []
 }
 
 

@@ -27,7 +27,6 @@ export default function LoginPage() {
           <input id='password-input' className='border-2 border-gray-400 p-2 outline-none rounded-md' type="password" name='password' />
           <Link className='text-center' href="/register">Create account</Link>
           {/* <div>{errorMessage && <p>{errorMessage}</p>}</div> */}
-          {/* <button className='bg-gradient p-2 rounded-md text-white mt-2 hover:brightness-110 duration-150' aria-disabled={pending} type="submit">{pending ? "Submitting..." : "Submit"}</button> */}
           <SubmitButton />
         </form>
       </main>

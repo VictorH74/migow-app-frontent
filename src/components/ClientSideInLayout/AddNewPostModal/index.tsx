@@ -16,7 +16,7 @@ const currentUser: UserInterface = {
     createdAt: "",
     email: "",
     id: "aa",
-    followers: [],
+    friendships: [],
     name: "victor almeidaa",
     username: "vyctor"
 }

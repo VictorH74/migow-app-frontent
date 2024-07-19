@@ -5,6 +5,10 @@ import { redirect } from "next/navigation";
 
 export async function authenticate(_currentState: unknown, formData: FormData) {
 
+    const signIn = async () => {
+
+    }
+
     /*
       try {
             await signIn('credentials', formData)
@@ -19,6 +23,10 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
             }
             throw error
         }
+    */
+
+    /*
+    const token = await signIn(formData);
     */
 
     await new Promise<void>((res) => {

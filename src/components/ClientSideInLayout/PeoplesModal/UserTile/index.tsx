@@ -12,7 +12,7 @@ export default function UserTile(props: UserTileProps) {
                 <p className="group-hover:underline font-semibold text-gray-600">{props.username}</p>
             </div>
 
-            <button className={twMerge("py-2 px-4 font-semibold rounded-full", props.isFollowed ? "bg-gray-200 text-gray-500" : "bg-gradient text-white")}>{props.isFollowed ? "Unfollow" : "Follow"}</button>
+            <button className={twMerge("py-2 px-4 font-semibold rounded-full", props.isFriend ? "bg-gray-200 text-gray-500" : "bg-gradient text-white")}>{props.isFriend ? "Unfollow" : "Follow"}</button>
         </li>
     )
 }

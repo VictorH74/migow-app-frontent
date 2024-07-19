@@ -1,11 +1,12 @@
 import React from 'react';
 import UserActivities from './components/UserActivities';
 import SendIcon from '@mui/icons-material/Send';
-import { usersMock } from '@/mockData';
-import Avatar from '@mui/material/Avatar';
-import { stringAvatar } from '@/util/functions';
+// import Avatar from '@mui/material/Avatar';
 import { ProfileSettingsInterface, UserInterface } from '@/interfaces';
 import { VisibilityEnum } from '@/enums';
+import { cookies } from "next/headers"
+import { ProfileUserType, SimpleUserType } from '@/types';
+import Avatar from '@/components/Avatar';
 
 // const fetchUser = async (id: string) => {
 //   return new Promise((res) => {
@@ -13,26 +14,35 @@ import { VisibilityEnum } from '@/enums';
 //   })
 // }
 
-// temp
-const currentUser: UserInterface = {
-  createdAt: "",
-  email: "",
-  followers: [usersMock[0], usersMock[1], usersMock[2], usersMock[3]],
-  id: "vvv",
-  name: "",
-  username: "",
+const getOwnerUser = async (username: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/users/username/${username}`);
+  return res.json() as Promise<ProfileUserType>
 }
 
-export default function ProfilePage({ params }: { params: { username: string } }) {
+const getCommonFriendship = async (currentUserId: string, profileOwnerUserId: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/friendships/common?userId=${currentUserId}&targetId=${profileOwnerUserId}`);
+  return res.json() as Promise<{ count: number; firstsTwoFriends: [SimpleUserType, SimpleUserType] }>
+}
+
+const checkIfHasFriendshipBetweenBoth = async (currentUserId: string, profileOwnerUserId: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/friendships/${currentUserId}/friendship-with/${profileOwnerUserId}`);
+  return res.json() as Promise<{ isFriend: boolean; }>
+}
+
+export default async function ProfilePage({ params }: { params: { username: string } }) {
+  // TODO: decrypt the token to get the current user id
+  const ownerToken = cookies().get("currentUser");
+  // e.g.:
+  // const currentUser = jwt.decript(ownerToken) as { id: string }
+  const currentUser = { id: "fc7dc70e-067b-414d-8a9d-35a2bb5c8736" }
 
   // Unique data aproach
   // const profileData = await clientHTTP.getProfileData(visitorId=currentUser.id)
-  // const {ownerUser, ownerUserFollowed, commonFollowersCount, firstTwoFollowers, profileSettings } = profileData
+  // const {ownerUser, hasFriendshipBetweenBoth, commonFollowersCount, firstTwoFollowers, profileSettings } = profileData
 
   // TODO: fetch owner user from api
-  // WITH CLIENTHTTP
-  // const ownerUser = await clientHTTP.findUserByUsername(params.username)
-  const ownerUser = usersMock.find(user => user.username === params.username)
+  // WITH FETCH
+  const ownerUser = await getOwnerUser(params.username);
 
   if (!ownerUser) return <div>User not found</div>
 
@@ -51,32 +61,20 @@ export default function ProfilePage({ params }: { params: { username: string } }
   const profileSettings: ProfileSettingsInterface = {
     id: "aaa",
     activityVisibility: VisibilityEnum.PUBLIC,
-    followersVisibility: VisibilityEnum.PUBLIC,
+    friendshipsVisibility: VisibilityEnum.PUBLIC,
     nameVisibility: VisibilityEnum.PUBLIC,
   }
 
-  // TODO: if !isOwner AND 1+ user followers in ownerUser followers -> fetch the firsts two folllowers profile img and followers count - 2
-  // WITH CLIENTHTTP
-  // const ownerUserFollowed = !isOwner ? false : (await clientHTTP.checkIfUserIsFollowedByUserId(ownerUser.id, currentUser.id)).followed
-  // temp
-  const ownerUserFollowed = !isOwner && !!currentUser.followers.find(u => u.id === ownerUser.id)
-  
-  const firstTwoFollowers: UserInterface[] = []
+  // TODO: if !isOwner AND 1+ user friendships in ownerUser friendships -> fetch the firsts two folllowers profile img and friendships count - 2
+  const hasFriendshipBetweenBoth = !isOwner && ((await checkIfHasFriendshipBetweenBoth(currentUser.id, ownerUser.id)).isFriend)
 
   // TODO: Create Follow table and indexes to performance query
-  // WITH CLIENTHTTP
-  // const commonFollowersCount = await clientHTTP.getCommonFollowers(currentUser.id, ownerUser.id)
-  // temp
-  const commonFollowersCount = currentUser.followers.reduce((total, u, index) => {
-    if (index < 2) {
-      firstTwoFollowers.push(u)
-    }
-    return total + (!!ownerUser.followers.find(us => us.id === u.id) ? 1 : 0)
-  }, 0)
+  // WITH FETCH
+  const commonFriendship = (await getCommonFriendship(currentUser.id, ownerUser.id));
 
   // TODO: fetch user profile settings to check privacy conditions and some profile configs
 
-  // TODO: if profileSettings.activityVisibility.PUBLIC OR (!isOwner AND activityVisibility.FOLLOWERS AND ownerUser.followers.includes(user.id))
+  // TODO: if profileSettings.activityVisibility.PUBLIC OR (!isOwner AND activityVisibility.FOLLOWERS AND ownerUser.friendships.includes(user.id))
 
 
   return (
@@ -88,17 +86,20 @@ export default function ProfilePage({ params }: { params: { username: string } }
 
         <div className=' flex gap-2'>
           {/* User IMG */}
-          <div className='size-44 bg-blue-400 rounded-full'></div>
+          {/* <div className='size-44 bg-blue-400 rounded-full'></div> */}
+          <Avatar image={ownerUser.profileImageUrl || ownerUser.name} avatarSxProps={{ width: 176, height: 176, fontSize: 12 }} />
 
           <div className='flex flex-col grow justify-center'>
             <div className='w-full'>
               <p className='text-2xl'>{ownerUser.name} <span className='text-1xl text-gray-600'> - {ownerUser.username}</span></p>
             </div>
-            {ownerUser.bio && (<div className='w-full'>{ownerUser.bio}</div>)}
+            {/* TODO: include bio collumn */}
+            {/* {ownerUser.bio && (<div className='w-full'>{ownerUser.bio}</div>)} */}
 
             <div className='w-full flex justify-between items-center'>
               <p>
-                {ownerUser.followers.length} followers
+                {/* {ownerUser.friendships.length} friendships */}
+                0 friendships
               </p>
               {isOwner ?
                 (
@@ -108,12 +109,13 @@ export default function ProfilePage({ params }: { params: { username: string } }
                 )
                 : (
                   <div>
+                    {/* TODO: conditionate 'Send Message' btn display by owner privacy settings */}
                     <button className='py-2 px-4 rounded-2xl bg-gray-500 text-white'>
                       <SendIcon /> Send Message
                     </button>
-                    {!ownerUserFollowed && (
+                    {!hasFriendshipBetweenBoth && (
                       <button className='py-2 px-4 rounded-2xl bg-blue-400 text-white ml-2'>
-                        Follow User
+                        Send friendship request
                       </button>
                     )}
 
@@ -122,25 +124,25 @@ export default function ProfilePage({ params }: { params: { username: string } }
             </div>
 
             {!isOwner && (
-              commonFollowersCount > 2 ?
+              commonFriendship.count > 2 ?
                 (
                   <div className='flex items-center gap-6'>
 
                     <div className='relative'>
-                      {firstTwoFollowers.map((f, i) => (
+                      {commonFriendship.firstsTwoFriends.map((f, i) => (
                         <div key={f.id} className={i === 1 ? 'absolute top-0 -right-5' : ""}>
-                          <Avatar {...stringAvatar(f.name, { width: 30, height: 30, fontSize: 12 })} />
+                          <Avatar image={f.profileImageUrl || f.name} avatarSxProps={{ width: 30, height: 30, fontSize: 12 }} />
                         </div>
                       ))}
                     </div>
 
                     <button className='hover:underline hover:underline-offset-2'>
-                      and {commonFollowersCount - 2} other common followers
+                      and {commonFriendship.count - 2} other common friendships
                     </button>
 
                   </div>
                 )
-                : (<p>{commonFollowersCount} common followers</p>)
+                : (<p>{commonFriendship.count} common friendships</p>)
             )}
 
             <div className='w-full'></div>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { ChatInterface } from "@/interfaces"
 import { usersMock } from "@/mockData"
 import { SimpleUserType } from "@/types"
@@ -28,7 +29,7 @@ export default function useChatListItem(props: ChatListItemProps) {
 
 
         setChatUser(userData)
-    })
+    }, [])
 
 
     return { chatUser }

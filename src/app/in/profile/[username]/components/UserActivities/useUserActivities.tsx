@@ -27,12 +27,12 @@ const getFilteredData: Record<ActivityQuery, (userId: string) => ActivityInterfa
 }
 
 const activitySegment: Record<UserEventEnum, string> = {
-  0: `replied this`,
-  1: "posted this",
-  2: `commented this`,
-  3: `reacted this`,
+  1: `replied this`,
+  2: "posted this",
+  3: `commented this`,
   4: `reacted this`,
-  5: `shared this`
+  5: `reacted this`,
+  6: `shared this`
 }
 
 export default function useUserActivities(props: UserActivitiesProps) {

@@ -1,5 +1,5 @@
 import { UserEventEnum, VisibilityEnum } from "./enums";
-import { ISODateType } from "./types";
+import { ISODateType, SimpleUserType } from "./types";
 
 export interface ReplyMsgType {
     id: string;
@@ -36,7 +36,7 @@ export interface UserInterface {
     profileImageUrl?: string
     bgImageUrl?: string
     bio?: string
-    followers: UserInterface[],
+    friendships: UserInterface[],
     createdAt: ISODateType
 }
 
@@ -50,7 +50,7 @@ export interface OnlineUserInterface {
 // ?
 export interface UserGenericProperty {
     id: string;
-    owner: UserInterface
+    owner: SimpleUserType
     createdAt: ISODateType
 }
 
@@ -58,7 +58,7 @@ export interface UserGenericProperty {
 export interface ProfileSettingsInterface {
     id: string;
     activityVisibility: VisibilityEnum
-    followersVisibility: VisibilityEnum
+    friendshipsVisibility: VisibilityEnum
     nameVisibility: VisibilityEnum
     // activityVisibility: VisibilityEnum
 }
@@ -76,7 +76,7 @@ export interface PostInterface extends UserGenericProperty {
     text?: string,
     sharedPost?: PostInterface
     mediaURLs?: MediaInterface[],
-    reactionCount: number
+    reactCount: number
     commentCount: number
     shareCount: number
 }
@@ -92,8 +92,8 @@ export interface ReactionInterface extends UserGenericProperty {
 // pk [user, post]
 export interface CommentInterface {
     id: string
-    user: UserInterface
-    post: PostInterface
+    owner: SimpleUserType
+    postId: Pick<PostInterface, "id">
     content: string
     createdAt: ISODateType
 
@@ -127,9 +127,10 @@ export interface NotificationInterface extends UserGenericProperty {
 export interface ActivityInterface {
     id: string
     user: UserInterface
-    post: PostInterface
     userEvent: UserEventEnum
+    createdAt: ISODateType
+
+    post: PostInterface
     comment?: CommentInterface,
     commentReply?: ReplayCommentInterface,
-    createdAt: ISODateType
 }

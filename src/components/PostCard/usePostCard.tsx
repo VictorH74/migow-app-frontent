@@ -1,5 +1,6 @@
 import { CommentInterface, ReplayCommentInterface, PostInterface } from '@/interfaces';
 import { commentsMock } from '@/mockData';
+import { PageResponse } from '@/types';
 import React from 'react';
 
 export interface PostCardProps extends PostInterface {
@@ -39,12 +40,17 @@ export default function usePostCard(props: PostCardProps) {
     setComments(prev => [...prev, ...response])
     setPage(prev => prev + 1)
     */
-
-    const response = commentsMock.filter(
-      c => c.post.id === props.id && c.id !== highlightCommentId
-    ).slice(page * commentPageLimit, page * commentPageLimit + commentPageLimit)
-    setComments(prev => [...prev, ...response])
+    // WITH FETCH
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/p-s/comments/${props.id}`)
+    const page = (await res.json()) as PageResponse<CommentInterface>
+    setComments(prev => [...prev, ...page.content])
     setPage(prev => prev + 1)
+
+    // const response = commentsMock.filter(
+    //   c => c.post.id === props.id && c.id !== highlightCommentId
+    // ).slice(page * commentPageLimit, page * commentPageLimit + commentPageLimit)
+    // setComments(prev => [...prev, ...response])
+    // setPage(prev => prev + 1)
   }
 
   return { comments, loadComments, page, recoveredAllComments }

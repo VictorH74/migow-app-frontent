@@ -7,8 +7,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { PeoplesModalStatus, RetrievedUserType } from "@/types";
 import { styled } from '@mui/material/styles';
-import { peoplesModalUserMock } from "@/mockData";
 import TabComponent from "./TabComponent";
+import useClientHTTP from "@/hooks/useClientHTTP";
 
 interface PeoplesModalProps {
     onClose(): void
@@ -65,37 +65,27 @@ const StyledTabs = styled((props: StyledTabsProps) => (
     },
 });
 
-// TODO: fetch users from users service
-const findPeoples = async (inputValue: string) => {
-    // WITH CLIENTHTTP
-    // return clientHTTP.findUsersByUsernamePrefix(inputValue)
-    return new Promise<RetrievedUserType[]>((resolve) => {
-        setTimeout(() => {
-            resolve(
-                peoplesModalUserMock.filter(user => user.username.startsWith(inputValue))
-            )
-        }, 700)
-    })
-}
-// TODO: fetch users from users service
-const findFollowers = async (inputValue: string) => {
-    // WITH CLIENTHTTP
-    // return clientHTTP.findFollowersByUsernamePrefix(inputValue)
-    return new Promise<RetrievedUserType[]>((resolve) => {
-        setTimeout(() => {
-            resolve(
-                peoplesModalUserMock.filter(user => user.username.startsWith(inputValue) && user.isFollowed)
-            )
-        }, 700)
-    })
-}
+
 
 export default function PeoplesModal(props: PeoplesModalProps) {
     const [tabIndex, setTabIndex] = React.useState(() => props.peoplesModalStatus === "inPeoples" ? 0 : 1);
+    const clientHTTP = useClientHTTP()
 
     const handleTabIndexChange = (_: React.SyntheticEvent, newValue: number) => {
         setTabIndex(newValue);
     };
+
+    const findPeoples = React.useCallback(async (inputValue: string) => {
+        // TODO: get current user id
+        // WITH CLIENTHTTP
+        return clientHTTP.getAllUserByUsernamePrefix("fc7dc70e-067b-414d-8a9d-35a2bb5c8736", inputValue);
+    }, [])
+
+    const findFollowers = React.useCallback(async (inputValue: string) => {
+        // TODO: get current user id
+        // WITH CLIENTHTTP
+        return clientHTTP.getAllFriendByUsernamePrefix("fc7dc70e-067b-414d-8a9d-35a2bb5c8736", inputValue)
+    }, [])
 
     return (
         <ModalContainer
