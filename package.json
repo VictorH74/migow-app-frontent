@@ -16,6 +16,7 @@
     "@mui/material": "^5.15.17",
     "@tanstack/react-query": "^5.39.0",
     "axios": "^1.7.2",
+    "jwt-decode": "^4.0.0",
     "kafkajs": "^2.2.4",
     "next": "^14.2.4",
     "plop": "^4.0.1",
