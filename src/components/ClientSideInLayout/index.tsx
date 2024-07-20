@@ -5,7 +5,6 @@ import LoadingLazyComponent from "../LoadingLazyComponent";
 import OnlineUsersSidebar from "./OnlineUsersSidebar";
 import Header from "./Header";
 import ChatComponent from "./ChatComponent";
-import Providers from "@/components/Providers";
 
 const PeoplesModal = React.lazy(() => import('./PeoplesModal'));
 const AddNewPostModal = React.lazy(() => import('./AddNewPostModal'));
@@ -17,7 +16,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
     const hook = useClientSideInLayout()
 
     return (
-        <Providers>
+        <>
             <Header navButtons={hook.navButtons} />
             {props.children}
             <OnlineUsersSidebar
@@ -37,7 +36,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
                 showFixedChatListSidebar={hook.showFixedChatListSidebar}
                 onClose={() => hook.setShowFixedChatListSidebar(false)}
             />
-        </Providers>
+        </>
     )
 
 }

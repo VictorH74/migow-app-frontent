@@ -11,6 +11,7 @@ import Avatar from '@/components/Avatar';
 import { Josefin_Sans } from 'next/font/google'
 import { twMerge } from 'tailwind-merge';
 import { NavButtonsType } from '@/components/ClientSideInLayout/useClientSideInLayout';
+import IconButton from '@/components/IconButton';
 
 const josefinSans = Josefin_Sans({ subsets: ["latin"], style: "italic" })
 
@@ -47,27 +48,16 @@ export default function Header(props: HeaderProps) {
         <h1 className={twMerge('font-semibold text-2xl ', josefinSans.className, "text-gradient")}>MigoW</h1>
         <div className={twMerge('flex gap-7 text-gray-500')}>
           {props.navButtons.map(btn => (
-            <button
+            <IconButton
               key={btn.label}
               {...(btn.rest ? btn.rest(notificationsPopup.open) : {})}
-              className={twMerge('text-center group hover:text-cyan-400 duration-200')}
+              Icon={btn.Icon}
               onClick={btn.rest ? notificationsPopup.handleClick : btn.onClick}
-            >
-              <btn.Icon sx={{ width: 35, height: 35, fontSize: 13 }} className={twMerge('', btn.isActive ? "text-cyan-400" : "")} />
-              <p
-                className={twMerge(`
-                group-hover:bg-gradient-to-r 
-                group-hover:from-red-200 
-                group-hover:from-10% 
-                group-hover:via-blue-500 
-                group-hover:via-50% 
-                group-hover:to-cyan-400 
-                group-hover:to-100% 
-                group-hover:bg-clip-text 
-                group-hover:text-transparent 
-                duration-150`, btn.isActive ? "text-gradient" : "")}
-              >{btn.label}</p>
-            </button>
+              label={btn.label}
+              iconSize={33}
+              transparentBg
+              isActive={btn.isActive}
+            />
           ))}
           <button className=''
             id="basic-button"

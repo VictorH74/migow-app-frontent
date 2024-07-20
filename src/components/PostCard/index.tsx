@@ -9,8 +9,8 @@ import { SxProps } from '@mui/material';
 import CardContainer from '@/components/CardContainer';
 import CardHeader from '@/components/CardContainer/CardHeader';
 import CommentList from './CommentList';
-import PostBottomInf from './PostBottomInf';
 import { twMerge } from 'tailwind-merge';
+import IconButton from '../IconButton';
 
 
 export default function PostCard({ showBottomActions = true, showBottomInf = true, ...props }: PostCardProps) {
@@ -72,57 +72,55 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
         )}
 
         <div className='bg-gray-500 h-[1px] mx-4' />
-        {/* {(showBottomInf || (!!props.sharedPost && !!props.text)) && (
-          <>
-            <PostBottomInf
-              recoveredAllComments={hook.recoveredAllComments}
-              reactionCount={props.reactCount}
-              commentCount={props.commentCount}
-              shareCount={props.shareCount}
-              loadComments={hook.loadComments}
-            />
-            <div className='bg-gray-500 h-[1px] mx-4' />
-          </>
-        )} */}
 
         {(showBottomActions || (!!props.sharedPost && !!props.text)) && (
-          <div className='flex justify-center gap-1 px-4 mt-2'>
+          <div className='flex justify-center gap-4 px-4 mt-2'>
             {
               [
                 {
                   Icon: AddReactionIcon,
                   count: props.reactCount,
                   onClick: () => { },
-                  label: "Add Reaction"
+                  label: "Add Reaction",
+                  buttonLabelSegment: "reactions"
                 },
                 {
                   Icon: AddCommentIcon,
                   count: props.commentCount,
-                  onClick: () => { },
-                  label: "Add Comment"
+                  onClick: hook.loadComments,
+                  label: "Add Comment",
+                  buttonLabelSegment: "comments"
                 },
                 {
                   Icon: ShareIcon,
                   count: props.shareCount,
                   onClick: () => { },
-                  label: "Share"
+                  label: "Share",
+                  buttonLabelSegment: "shares"
                 },
               ].map(btnData => (
-                <button key={btnData.label} className='flex gap-2 items-center text-gray-600 font-semibold hover:bg-gray-200 duration-200 px-5 py-2 rounded relative mb-3' >
-                  <btnData.Icon className='text-3xl' />
-                  <span>{btnData.label}</span>
-                  <span className='absolute w-10 -bottom-3 left-1/2 -translate-x-1/2 right-2 rounded-xl bg-cyan-400 text-white text-sm'>{btnData.count}</span>
-                </button>
+                <div className='' key={btnData.label} >
+                  <IconButton
+
+                    Icon={btnData.Icon}
+                    onClick={btnData.onClick}
+                    label={btnData.label}
+                    labelClassName='font-semibold'
+                    direction='horizontal'
+                  />
+                  <button
+                    className='text-sm font-semibold text-center text-gray-600 hover:underline w-full'
+                    disabled={btnData.count === 0}
+                  >
+                    {btnData.count} {btnData.buttonLabelSegment}
+                  </button>
+                </div>
               ))
             }
           </div>
         )}
 
-        {props.commentCount > 0 && hook.comments.length === 0 ? (
-          <button className='bg-gradient text-white p-1 font-semibold text-center' onClick={hook.loadComments}>
-            Load Comments
-          </button>
-        ) : (
+        {props.commentCount > 0 && hook.comments.length === 0 && (
           <CommentList
             commentCount={props.commentCount}
             comments={hook.comments}

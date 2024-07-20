@@ -2,11 +2,12 @@
 import React from "react"
 import { usePathname, useRouter } from "next/navigation";
 import { PeoplesModalStatus } from "@/types";
+
 import AddIcon from '@mui/icons-material/Add';
 import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ModeCommentIcon from '@mui/icons-material/ModeComment';
-import PeopleIcon from '@mui/icons-material/People';
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
 

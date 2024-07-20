@@ -1,40 +1,29 @@
 import React from 'react';
 import UserActivities from './components/UserActivities';
 import SendIcon from '@mui/icons-material/Send';
-// import Avatar from '@mui/material/Avatar';
 import { ProfileSettingsInterface, UserInterface } from '@/interfaces';
 import { VisibilityEnum } from '@/enums';
 import { cookies } from "next/headers"
 import { ProfileUserType, SimpleUserType } from '@/types';
 import Avatar from '@/components/Avatar';
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { customFetch } from '@/lib/actions';
 
-// const fetchUser = async (id: string) => {
-//   return new Promise((res) => {
 
-//   })
-// }
+const getOwnerUser = async (username: string) =>
+  customFetch<ProfileUserType>(`/u-s/users/username/${username}`)
 
-const getOwnerUser = async (username: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/users/username/${username}`);
-  return res.json() as Promise<ProfileUserType>
-}
+const getCommonFriendship = async (currentUserId: string, profileOwnerUserId: string) =>
+  customFetch<{ count: number; firstsTwoFriends: [SimpleUserType, SimpleUserType] }>
+    (`/u-s/friendships/common?userId=${currentUserId}&targetId=${profileOwnerUserId}`)
 
-const getCommonFriendship = async (currentUserId: string, profileOwnerUserId: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/friendships/common?userId=${currentUserId}&targetId=${profileOwnerUserId}`);
-  return res.json() as Promise<{ count: number; firstsTwoFriends: [SimpleUserType, SimpleUserType] }>
-}
-
-const checkIfHasFriendshipBetweenBoth = async (currentUserId: string, profileOwnerUserId: string) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/u-s/friendships/${currentUserId}/friendship-with/${profileOwnerUserId}`);
-  return res.json() as Promise<{ isFriend: boolean; }>
-}
+const checkIfHasFriendshipBetweenBoth = async (currentUserId: string, profileOwnerUserId: string) =>
+  customFetch<{ isFriend: boolean; }>(`/u-s/friendships/${currentUserId}/friendship-with/${profileOwnerUserId}`)
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
-  // TODO: decrypt the token to get the current user id
-  const ownerToken = cookies().get("currentUser");
-  // e.g.:
-  // const currentUser = jwt.decript(ownerToken) as { id: string }
-  const currentUser = { id: "fc7dc70e-067b-414d-8a9d-35a2bb5c8736" }
+  const ownerToken = cookies().get("accessToken");
+  const decoded = jwtDecode(ownerToken!.value);
+  const currentUser = { id: decoded.sub as string }
 
   // Unique data aproach
   // const profileData = await clientHTTP.getProfileData(visitorId=currentUser.id)
@@ -152,7 +141,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
         {/* diviser */}
         <div className='bg-gray-600 w-[85%] m-auto h-[2px] my-9' />
 
-        <UserActivities userId={ownerUser.id} />
+        {/* <UserActivities userId={ownerUser.id} /> */}
 
       </main>
     </div>

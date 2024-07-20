@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
+import { cookies } from "next/headers";
+import ClientHTTPProvider from "@/contexts/ClientHTTPProvider";
+import ClientGlobalProviders from "@/components/ClientGlobalProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,9 +18,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const ownerToken = cookies().get("accessToken");
+
   return (
     <html lang="en">
-      <body className={twMerge("bg-[#EFEFEF]", inter.className)}>{children}</body>
+      <ClientGlobalProviders recoveredToken={ownerToken?.value} >
+        <body className={twMerge("bg-[#EFEFEF]", inter.className)}>{children}</body>
+      </ClientGlobalProviders>
     </html>
   );
 }

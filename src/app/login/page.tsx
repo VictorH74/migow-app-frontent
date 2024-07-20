@@ -4,10 +4,28 @@ import React from 'react';
 import { authenticate } from '@/lib/actions'
 import { useFormState, useFormStatus } from 'react-dom'
 import SubmitButton from './SubmitButton';
+import useClientHTTP from '@/hooks/useClientHTTP';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined)
-  
+  const clientHTTP = useClientHTTP();
+  const router = useRouter()
+  const [errorMessage, dispatch] = useFormState(authenticate, {message: "", status: 0})
+
+  // const [errorMessage, dispatch] = useFormState(async (_currentState: unknown, formData: FormData) => {
+  //   try {
+  //     const token = await authenticate(_currentState, formData);
+  //     clientHTTP.setAuthorization(token);
+  //     // clientHTTP.setAuthorization(token); // Define o token no cliente HTTP
+  //     // Redireciona para a página inicial após o login bem-sucedido
+  //     // window.location.href = "/";
+  //     router.replace("/")
+  //   } catch (error) {
+  //     console.error(error);
+  //     // Defina a mensagem de erro apropriada aqui
+  //   }
+  // }, undefined);
+
   return (
     <div className='w-screen h-screen grid place-items-center'>
       <main className='py-7 px-5 bg-white min-w-[400px] shadow-lg'>
@@ -25,6 +43,7 @@ export default function LoginPage() {
             Password
           </label>
           <input id='password-input' className='border-2 border-gray-400 p-2 outline-none rounded-md' type="password" name='password' />
+          {errorMessage?.message && <p className='text-red-700 text-sm font-semibold'>{errorMessage.message}</p>}
           <Link className='text-center' href="/register">Create account</Link>
           {/* <div>{errorMessage && <p>{errorMessage}</p>}</div> */}
           <SubmitButton />

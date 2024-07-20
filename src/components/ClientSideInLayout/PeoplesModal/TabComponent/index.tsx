@@ -1,7 +1,5 @@
 import React from "react"
-import { RetrievedUserType } from "@/types"
 import useTabComponent, { TabPanelProps } from "../useTabComponent"
-import { peoplesModalUserMock } from "@/mockData"
 import Image from "next/image";
 import circleImg from "@/assets/gradient-circle-img.png"
 

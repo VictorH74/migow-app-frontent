@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { cookies } from 'next/headers';
+import { detroyJWT } from '@/lib/actions';
 
 export default function useHeader() {
   const headerRef = React.useRef<HTMLHeadElement | null>(null)
@@ -34,24 +35,7 @@ export default function useHeader() {
   }, [])
 
   const handleLogOut = async () => {
-    // logout user
-    //...
-
-    try {
-      await fetch('../api/auth/signout', {
-        method: 'POST',
-        credentials: 'include'
-      })
-
-      router.replace("/login")
-
-    } catch (e) {
-      alert('Error')
-      console.error(e)
-    }
-
-
-
+    await detroyJWT()
   }
 
   return {
