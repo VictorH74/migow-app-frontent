@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import useDebounce from "@/hooks/useDebounce";
-import { PageResponse, RetrievedUserType } from "@/types";
+import { ResponsePageType, RetrievedUserType } from "@/types";
 import React from "react";
 
 export interface TabPanelProps {
     children(user: RetrievedUserType): React.ReactNode;
-    queryFunc(inputValue: string): Promise<PageResponse<RetrievedUserType>>
+    queryFunc(inputValue: string): Promise<ResponsePageType<RetrievedUserType>>
     tabIndex: number;
     currentTabIndex: number;
 

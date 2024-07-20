@@ -5,7 +5,7 @@ import UserTile from "./UserTile";
 import ModalContainer from "@/components/ModalContainer";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { PeoplesModalStatus, RetrievedUserType } from "@/types";
+import { ResponsePageType, PeoplesModalStatus, RetrievedUserType, SimpleUserType } from "@/types";
 import { styled } from '@mui/material/styles';
 import TabComponent from "./TabComponent";
 import useClientHTTP from "@/hooks/useClientHTTP";
@@ -65,8 +65,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
     },
 });
 
-
-
+// TODO: implements infinity scroll
 export default function PeoplesModal(props: PeoplesModalProps) {
     const [tabIndex, setTabIndex] = React.useState(() => props.peoplesModalStatus === "inPeoples" ? 0 : 1);
     const clientHTTP = useClientHTTP()
@@ -76,15 +75,16 @@ export default function PeoplesModal(props: PeoplesModalProps) {
     };
 
     const findPeoples = React.useCallback(async (inputValue: string) => {
-        // TODO: get current user id
         // WITH CLIENTHTTP
-        return clientHTTP.getAllUserByUsernamePrefix("fc7dc70e-067b-414d-8a9d-35a2bb5c8736", inputValue);
+        return clientHTTP.getAllUserByUsernamePrefix("{tokenUserId}", inputValue);
     }, [])
 
     const findFollowers = React.useCallback(async (inputValue: string) => {
-        // TODO: get current user id
         // WITH CLIENTHTTP
-        return clientHTTP.getAllFriendByUsernamePrefix("fc7dc70e-067b-414d-8a9d-35a2bb5c8736", inputValue)
+        const simpleUsersPage: ResponsePageType<SimpleUserType> = await clientHTTP.getAllFriendByUsernamePrefix("{tokenUserId}", inputValue)
+        simpleUsersPage.content = simpleUsersPage.content.map(u => ({ ...u, isFriend: true }));
+        return simpleUsersPage as ResponsePageType<RetrievedUserType>
+
     }, [])
 
     return (

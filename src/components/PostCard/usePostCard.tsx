@@ -1,6 +1,6 @@
 import { CommentInterface, ReplayCommentInterface, PostInterface } from '@/interfaces';
 import { commentsMock } from '@/mockData';
-import { PageResponse } from '@/types';
+import { ResponsePageType } from '@/types';
 import React from 'react';
 
 export interface PostCardProps extends PostInterface {
@@ -42,7 +42,7 @@ export default function usePostCard(props: PostCardProps) {
     */
     // WITH FETCH
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/p-s/comments/${props.id}`)
-    const page = (await res.json()) as PageResponse<CommentInterface>
+    const page = (await res.json()) as ResponsePageType<CommentInterface>
     setComments(prev => [...prev, ...page.content])
     setPage(prev => prev + 1)
 

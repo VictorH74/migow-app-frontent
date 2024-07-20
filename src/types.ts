@@ -13,6 +13,8 @@ type RetrievedUserType = SimpleUserType & { isFriend: boolean }
 
 type ChatIdWithUserType = { chat: ChatIdType, user: SimpleUserType }
 
+type GetAllPostFilterType = "recent" | "popular"
+
 type ChatBoxType = {
     chatId: string,
     user: SimpleUserType
@@ -34,7 +36,7 @@ type Pageable = {
     paged: boolean,
     unpaged: boolean,
 }
-type PageResponse<T> = {
+type ResponsePageType<T> = {
     totalPages: number,
     pageable: Pageable,
     first: number,
@@ -53,8 +55,9 @@ export type {
     SimpleUserType,
     ProfileUserType,
     RetrievedUserType,
+    GetAllPostFilterType,
     ChatIdWithUserType,
     ChatBoxType,
     PeoplesModalStatus,
-    PageResponse
+    ResponsePageType
 }
