@@ -46,7 +46,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 
 const getIdFromtoken = (token: string) => (jwtDecode(token).sub) as string;
 
-export async function customFetch<T>(url: `/${string}`, init?: RequestInit) {
+export async function serverFetch<T>(url: `/${string}`, init?: RequestInit) {
     const ownerToken = cookies().get("accessToken");
 
     const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL + url.replaceAll("{tokenUserId}", getIdFromtoken(ownerToken!.value)),

@@ -1,3 +1,4 @@
+import { ResponsePageInterface } from "@/interfaces/ResponsePage";
 import { SxProps } from "@mui/material";
 
 const stringToColor = (string: string) => {
@@ -58,4 +59,13 @@ export const formatISODate = (ISODate: string) => {
         return currentMinutes - minutes + "m"
 
     return "now"
+}
+
+export const parsePaginationToParams = (pagination?: ResponsePageInterface.PaginationType): string => {
+    const params: ResponsePageInterface.PaginationType = {
+        pageNumber: 0,
+        pageSize: 10
+    }
+
+    return new URLSearchParams(Object.assign(params, pagination) as Record<string, string>).toString()
 }

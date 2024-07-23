@@ -2,9 +2,13 @@
 // temp 
 
 import { URL } from "url"
-import { ActivityInterface, CommentInterface, ReplayCommentInterface, NotificationInterface, PostInterface, UserInterface, OnlineUserInterface, ChatInterface, MessageInterface } from "./interfaces"
 import { UserEventEnum } from "./enums"
-import { RetrievedUserType } from "./types"
+import { MessageInterface } from "./interfaces/Message"
+import { UserInterface } from "./interfaces/User"
+import { ChatInterface } from "./interfaces/Chat"
+import { ActivityInterface } from "./interfaces/Activity"
+import { NotificationInterface } from "./interfaces/Notification"
+import { PostInterface } from "./interfaces/Post"
 
 
 export const usersMock: UserInterface[] = [
@@ -109,7 +113,7 @@ export const messagesMock: MessageInterface[] = [
   }
 ]
 
-export const peoplesModalUserMock: RetrievedUserType[] = [
+export const peoplesModalUserMock: UserInterface.RetrievedType[] = [
   {
     profileImageUrl: "https://th.bing.com/th/id/OIP.h04o3WE6Gle5wjqYLzhATwHaHa?pid=ImgDet&w=198&h=198&c=7",
     id: "aaa",
@@ -164,7 +168,7 @@ export const peoplesModalUserMock: RetrievedUserType[] = [
   },
 ]
 
-export const onlineUsersMock: OnlineUserInterface[] = [
+export const onlineUsersMock: UserInterface.OnlineUserType[] = [
   {
     profileImageUrl: "https://th.bing.com/th/id/OIP.h04o3WE6Gle5wjqYLzhATwHaHa?pid=ImgDet&w=198&h=198&c=7",
     id: "aaa",
@@ -211,6 +215,38 @@ export const onlineUsersMock: OnlineUserInterface[] = [
   },
 ]
 
+// export const activitiesMock: ActivityInterface[] = [
+//   {
+//     id: "bbb",
+//     post: postsMock[2],
+//     user: usersMock[1],
+//     userEvent: UserEventEnum.NEW_POST,
+//     createdAt: '2024-05-14T22:50:00.098Z',
+//   },
+//   {
+//     id: "aaa",
+//     post: postsMock[0],
+//     user: usersMock[1],
+//     userEvent: UserEventEnum.SHARE_POST,
+//     createdAt: '2024-05-15T23:50:10.436Z',
+//   },
+//   {
+//     id: "ccc",
+//     post: postsMock[0],
+//     user: usersMock[1],
+//     userEvent: UserEventEnum.COMMENT_POST,
+//     comment: commentsMock[0],
+//     createdAt: "2024-05-14T22:55:00.098Z",
+//   },
+//   {
+//     id: "ddd",
+//     post: postsMock[0],
+//     user: usersMock[1],
+//     userEvent: UserEventEnum.COMMENT_REPLAY,
+//     commentReply: commentRepliesMock[0],
+//     createdAt: "2024-05-14T22:55:00.098Z",
+//   },
+// ]
 
 export const postsMock: PostInterface[] = [
   {
@@ -218,17 +254,33 @@ export const postsMock: PostInterface[] = [
     owner: usersMock[1],
     createdAt: '2024-05-15T23:50:10.436Z',
     text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime doloribus dicta.',
-    reactionCount: 0,
+    reactCount: 0,
     commentCount: 12,
     shareCount: 0,
+    reactionTypeCounts: {
+      cuteReaction: 0,
+      funnyReaction: 0,
+      likeReaction: 0,
+      loveReaction: 0,
+      sadReaction: 0,
+      scaryReaction: 0,
+    },
     sharedPost: {
       id: "sadf3g",
       owner: usersMock[0],
       createdAt: '2024-05-15T23:44:10.436Z',
       text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime doloribus dicta, impedit inventore voluptates et dolores mollitia atque molestiae fugit qui eaque repellendus. Quos, distinctio adipisci soluta nemo amet a!',
-      reactionCount: 0,
+      reactCount: 0,
       commentCount: 3,
       shareCount: 0,
+      reactionTypeCounts: {
+        cuteReaction: 0,
+        funnyReaction: 0,
+        likeReaction: 0,
+        loveReaction: 0,
+        sadReaction: 0,
+        scaryReaction: 0,
+      },
       mediaURLs: [
         {
           id: 7,
@@ -244,8 +296,16 @@ export const postsMock: PostInterface[] = [
     owner: usersMock[0],
     createdAt: '2024-05-15T23:44:10.436Z',
     text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime doloribus dicta, impedit inventore voluptates et dolores mollitia atque molestiae fugit qui eaque repellendus. Quos, distinctio adipisci soluta nemo amet a!',
-    reactionCount: 0,
+    reactCount: 0,
     commentCount: 3,
+    reactionTypeCounts: {
+      cuteReaction: 0,
+      funnyReaction: 0,
+      likeReaction: 0,
+      loveReaction: 0,
+      sadReaction: 0,
+      scaryReaction: 0,
+    },
     shareCount: 0,
     mediaURLs: [
       {
@@ -261,8 +321,16 @@ export const postsMock: PostInterface[] = [
     owner: usersMock[1],
     createdAt: '2024-05-14T22:50:00.098Z',
     text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime doloribus dicta, impedit inventore voluptates et dolores mollitia atque molestiae fugit qui eaque repellendus. Quos, distinctio adipisci soluta nemo amet a!',
-    reactionCount: 0,
+    reactCount: 0,
     commentCount: 0,
+    reactionTypeCounts: {
+      cuteReaction: 0,
+      funnyReaction: 0,
+      likeReaction: 0,
+      loveReaction: 0,
+      sadReaction: 0,
+      scaryReaction: 0,
+    },
     shareCount: 0,
     mediaURLs: [
       {
@@ -294,8 +362,16 @@ export const postsMock: PostInterface[] = [
   {
     id: "sf9sj4",
     owner: usersMock[2],
-    reactionCount: 0,
+    reactCount: 0,
     commentCount: 0,
+    reactionTypeCounts: {
+      cuteReaction: 0,
+      funnyReaction: 0,
+      likeReaction: 0,
+      loveReaction: 0,
+      sadReaction: 0,
+      scaryReaction: 0,
+    },
     shareCount: 0,
     createdAt: '2023-05-15T22:51:00.098Z',
     text: 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime doloribus dicta, impedit inventore voluptates et dolores mollitia atque molestiae fugit qui eaque repellendus. Quos, distinctio adipisci soluta nemo amet a!',
@@ -313,188 +389,6 @@ export const postsMock: PostInterface[] = [
         type: "image/jpeg"
       },
     ],
-  },
-]
-
-export const commentsMock: CommentInterface[] = [
-  {
-    id: "aaa",
-    content: "nice bro!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[1]
-  },
-  {
-    id: "xxx",
-    content: "yes",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "bbb",
-    content: "very good",
-    post: postsMock[0],
-    createdAt: "2024-05-14T23:01:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "ccc",
-    content: "nice!!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[2]
-  },
-  {
-    id: "hhh",
-    content: "nice bro!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[1]
-  },
-  {
-    id: "iii",
-    content: "yes",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "jjj",
-    content: "very good",
-    post: postsMock[0],
-    createdAt: "2024-05-14T23:01:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "kkk",
-    content: "nice!!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[2]
-  },
-  {
-    id: "lll",
-    content: "nice bro!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[1]
-  },
-  {
-    id: "mmm",
-    content: "yes",
-    post: postsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "nnn",
-    content: "very good",
-    post: postsMock[0],
-    createdAt: "2024-05-14T23:01:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "ooo",
-    content: "nice!!!",
-    post: postsMock[0],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[2]
-  },
-  {
-    id: "ddd",
-    content: "awnsome!",
-    post: postsMock[1],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[0],
-  },
-  {
-    id: "eee",
-    content: "fascinant",
-    post: postsMock[1],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[3]
-  },
-  {
-    id: "fff",
-    content: "GG",
-    post: postsMock[1],
-    createdAt: "2024-05-14T24:55:00.098Z",
-    reactionCount: 0,
-    replyCommentCount: 0,
-    user: usersMock[2]
-  },
-]
-
-export const commentRepliesMock: ReplayCommentInterface[] = [
-  {
-    id: "aaa",
-    user: usersMock[1],
-    comment: commentsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-    content: "Comentário de resposta",
-    reactionCount: 0,
-  },
-]
-
-export const activitiesMock: ActivityInterface[] = [
-  {
-    id: "bbb",
-    post: postsMock[2],
-    user: usersMock[1],
-    userEvent: UserEventEnum.NEW_POST,
-    createdAt: '2024-05-14T22:50:00.098Z',
-  },
-  {
-    id: "aaa",
-    post: postsMock[0],
-    user: usersMock[1],
-    userEvent: UserEventEnum.SHARE_POST,
-    createdAt: '2024-05-15T23:50:10.436Z',
-  },
-  {
-    id: "ccc",
-    post: postsMock[0],
-    user: usersMock[1],
-    userEvent: UserEventEnum.COMMENT_POST,
-    comment: commentsMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
-  },
-  {
-    id: "ddd",
-    post: postsMock[0],
-    user: usersMock[1],
-    userEvent: UserEventEnum.COMMENT_REPLAY,
-    commentReply: commentRepliesMock[0],
-    createdAt: "2024-05-14T22:55:00.098Z",
   },
 ]
 

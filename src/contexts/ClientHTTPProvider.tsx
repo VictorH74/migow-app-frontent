@@ -1,7 +1,6 @@
 "use client"
 import React, { PropsWithChildren } from "react";
 import axios from "axios"
-import { ClientHTTPWithAxios } from "@/lib/clientHTTP/clientHTTPWithAxios";
 import { ClientHTTPInterface } from "@/lib/clientHTTP/interfaces";
 import { clientHTTPWithStandartFetch } from "@/lib/clientHTTP/clientHTTPWithStandartFetch";
 

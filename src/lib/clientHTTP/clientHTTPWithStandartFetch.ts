@@ -1,68 +1,93 @@
-import { UserInterface, ActivityInterface, NotificationInterface, PostInterface, CommentInterface, ReplayCommentInterface, ReactionInterface } from "@/interfaces";
-import { GetAllPostFilterType, ResponsePageType, RetrievedUserType, SimpleUserType } from "@/types";
+import { GetAllPostFilterType, ISODateRangeFilter } from "@/types";
 import { ClientHTTPInterface } from "./interfaces";
-import { customFetch } from "../actions";
+import { serverFetch } from "../actions";
+import { UserInterface } from "@/interfaces/User";
+import { CommentInterface } from "@/interfaces/Comment";
+import { PostInterface } from "@/interfaces/Post";
+import { NotificationInterface } from "@/interfaces/Notification";
+import { ActivityInterface } from "@/interfaces/Activity";
+import { ResponsePageInterface } from "@/interfaces/ResponsePage";
+import { ReactionInterface } from "@/interfaces/Reaction";
+import { parsePaginationToParams } from "@/util/functions";
+import { ReactionTypeEnum } from "@/enums";
 
 export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
-    async getAllUserByUsernamePrefix(userId: string, usernamePrefix: string = "", pageNumber: number = 0, pageSize: number = 10) {
-        return customFetch<ResponsePageType<RetrievedUserType>>(
-            `/u-s/users/by/${userId}?usernamePrefix=${usernamePrefix}&pageNumber=${pageNumber}&pageSize=${pageSize}`)
+    async getAllUserByUsernamePrefix(userId: string, usernamePrefix: string = "", pagination?: ResponsePageInterface.PaginationType) {
+        return serverFetch<ResponsePageInterface<UserInterface.RetrievedType>>(
+            `/u-s/users/by/${userId}?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
     }
-
-    async getAllFriendByUsernamePrefix(userId: string, usernamePrefix: string = "", pageNumber: number = 0, pageSize: number = 10) {
-        return customFetch<ResponsePageType<RetrievedUserType>>(
-            `/u-s/users/${userId}/friendships?usernamePrefix=${usernamePrefix}&pageNumber=${pageNumber}&pageSize=${pageSize}`)
+    async getAllFriendByUsernamePrefix(userId: string, usernamePrefix: string = "", pagination?: ResponsePageInterface.PaginationType) {
+        return serverFetch<ResponsePageInterface<UserInterface.RetrievedType>>(
+            `/u-s/users/${userId}/friendships?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
     }
-
     async getUserByUsername(username: string): Promise<UserInterface> {
-        return customFetch<UserInterface>(`/u-s/users/username/${username}`)
+        return serverFetch<UserInterface>(`/u-s/users/username/${username}`)
     }
-
     async getUserById(userId: string): Promise<UserInterface> {
-        return customFetch<UserInterface>(`/u-s/users/${userId}`)
+        return serverFetch<UserInterface>(`/u-s/users/${userId}`)
+    }
+    async getAllCommonFriendCount(targetUserId: string): Promise<{ count: number; }> {
+        return serverFetch<{ count: number; }>(
+            `/u-s/friendships/common?targetId=${targetUserId}`)
     }
 
-    getUserActivities(userId: string, queryStr: string): Promise<ResponsePageType<ActivityInterface>> {
+    getUserActivities(userId: string, queryStr: string): Promise<ResponsePageInterface<ActivityInterface>> {
         throw new Error("Method not implemented.");
     }
-
-    getUserNotifications(userId: string): Promise<ResponsePageType<NotificationInterface>> {
+    getUserNotifications(userId: string): Promise<ResponsePageInterface<NotificationInterface>> {
         throw new Error("Method not implemented.");
-    }
-
-    async getAllCommonFriendCount(currentUserId: string, targetUserId: string): Promise<{ count: number; }> {
-        return customFetch<{ count: number; }>(
-            `/u-s/friendships/common?userId=${currentUserId}&targetId=${targetUserId}`)
     }
 
     checkIfUserBlockedUserId(targetUserId: string, currentUserId: string): Promise<{ status: boolean; }> {
         throw new Error("Method not implemented.");
     }
-
     async checkIfUserHasFriendshipWith(targetUserId: string, currentUserId: string): Promise<{ isFriend: boolean; }> {
-        return customFetch<{ isFriend: boolean; }>(
+        return serverFetch<{ isFriend: boolean; }>(
             `/u-s/friendships/${targetUserId}/friendship-with/${currentUserId}`)
     }
 
-    getAllFriendPost(userId: string, filter: GetAllPostFilterType, pageNumber: number = 0, pageSize: number = 10): Promise<ResponsePageType<PostInterface>> {
-        return customFetch<ResponsePageType<PostInterface>>(
-            `/p-s/posts/${userId}/${filter}?pageNumber=${pageNumber}&pageSize=${pageSize}`)
+    getAllFriendPost(filter: GetAllPostFilterType, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<PostInterface>> {
+        return serverFetch<ResponsePageInterface<PostInterface>>(
+            `/p-s/posts/${filter}?${parsePaginationToParams(pagination)}`)
+    }
+    getAllPostComment(postId: string, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<CommentInterface>> {
+        return serverFetch<ResponsePageInterface<CommentInterface>>(
+            `/p-s/comments/${postId}?${parsePaginationToParams(pagination)}`)
+    }
+    getAllCommentReply(commentId: string, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<CommentInterface.ReplyType>> {
+        return serverFetch<ResponsePageInterface<CommentInterface.ReplyType>>(
+            `/p-s/reply-comments/${commentId}?${parsePaginationToParams(pagination)}`)
     }
 
-    getAllPostComment(postId: string, pageNumber: number = 0, pageSize: number = 10): Promise<ResponsePageType<CommentInterface>> {
-        throw new Error("Method not implemented.");
+    createPost(post: PostInterface.CreateType): Promise<PostInterface> {
+        return serverFetch<PostInterface>(`/p-s/posts`, {
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(post)
+        })
+    }
+    createComment(comment: CommentInterface.CreateType): Promise<CommentInterface> {
+        return serverFetch<CommentInterface>(`/p-s/comments`, {
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(comment)
+        })
+    }
+    createReplyComment(reply: CommentInterface.CreateReplyType): Promise<CommentInterface.ReplyType> {
+        return serverFetch<CommentInterface.ReplyType>(`/p-s/reply-comments`, {
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(reply)
+        })
     }
 
-    getAllCommentReply(commentId: string, pageNumber: number = 0, pageSize: number = 10): Promise<ResponsePageType<ReplayCommentInterface>> {
-        throw new Error("Method not implemented.");
+    getCommentById(commentId: string): Promise<CommentInterface> {
+        return serverFetch<CommentInterface>(`/p-s/comments/${commentId}`);
     }
 
-    getAllTargetReaction(targetId: string): Promise<ResponsePageType<ReactionInterface>> {
-        throw new Error("Method not implemented.");
-    }
+    getAllReactionUser(target: ReactionInterface.TargetType, usernamePrefix?: string, reactionTypeCode?: ReactionTypeEnum, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<UserInterface.SimpleType>> {
+        let url = `p-s/reactions/with-target/${target}`
 
-    async logOut() {
-        
-    }
+        if (reactionTypeCode) url += `/by-reaction-type/${reactionTypeCode}`
 
+        return serverFetch<ResponsePageInterface<UserInterface.SimpleType>>(
+            `/${url}?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
+    }
 }

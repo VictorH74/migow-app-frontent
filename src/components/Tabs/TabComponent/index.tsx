@@ -1,10 +1,10 @@
-import React from "react"
-import useTabComponent, { TabPanelProps } from "../useTabComponent"
-import Image from "next/image";
+import Image from "next/image"
+import useTabComponent, { TabComponentProps } from "./useTabComponent"
 import circleImg from "@/assets/gradient-circle-img.png"
 
-export default function TabComponent(props: TabPanelProps) {
-    const hook = useTabComponent(props);
+
+export default function TabComponent<UserT>(props: TabComponentProps<UserT>) {
+    const hook = useTabComponent(props)
 
     return (
         <div
@@ -15,7 +15,7 @@ export default function TabComponent(props: TabPanelProps) {
             className="w-full grow"
         >
             <input
-                className="p-2 border border-gray-500 outline-none rounded-full w-full"
+                className="p-2 border border-gray-500 outline-none rounded-full w-full mb-3"
                 type="text"
                 placeholder="Search username"
                 value={hook.inputValue}
@@ -27,7 +27,12 @@ export default function TabComponent(props: TabPanelProps) {
                 hook.loading
                     ? (
                         <div className="size-full grid place-items-center">
-                            <Image className=" animate-spin" width={50} height={50} alt="loading circle image" src={circleImg} />
+                            <Image
+                                className=" animate-spin"
+                                width={50} height={50}
+                                alt="loading circle image"
+                                src={circleImg}
+                            />
                         </div>
                     )
                     : hook.users.length === 0 ?
