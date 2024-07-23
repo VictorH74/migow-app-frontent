@@ -5,22 +5,25 @@ import LoadingLazyComponent from "../LoadingLazyComponent";
 import OnlineUsersSidebar from "./OnlineUsersSidebar";
 import Header from "./Header";
 import ChatComponent from "./ChatComponent";
+import { UserInterface } from "@/interfaces/User";
 
 const PeoplesModal = React.lazy(() => import('./PeoplesModal'));
 const AddNewPostModal = React.lazy(() => import('./AddNewPostModal'));
 // const FixedChatListSidebar = React.lazy(() => import('./FixedChatListSidebar'));
 
-interface ClientSideInLayoutProps extends React.PropsWithChildren { }
+interface ClientSideInLayoutProps extends React.PropsWithChildren {
+    currentUser: UserInterface.SimpleType
+}
 
 export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
     const hook = useClientSideInLayout()
 
     return (
         <>
-            <Header navButtons={hook.navButtons} />
+            <Header navButtons={hook.navButtons} currentUser={props.currentUser} />
             {props.children}
             <OnlineUsersSidebar
-                openPeoplesModalInFollowers={hook.openPeoplesModalInFollowers}
+                openPeoplesModalInFriends={hook.openPeoplesModalInFriends}
                 incrementRight={hook.showAddPostModal || hook.showFixedChatListSidebar || hook.peoplesModalStatus !== "hidden"}
             />
 

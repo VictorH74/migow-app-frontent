@@ -80,8 +80,8 @@ export default function useClientSideInLayout() {
         },
     ], [pathname, peoplesModalStatus, showAddPostModal, showFixedChatListSidebar, openedModal])
 
-    const openPeoplesModalInFollowers = () => {
-        setPeoplesModalStatus("inFollowers")
+    const openPeoplesModalInFriends = () => {
+        setPeoplesModalStatus("inFriends")
     }
 
     return {
@@ -93,6 +93,6 @@ export default function useClientSideInLayout() {
         setPeoplesModalStatus,
         setShowAddPostModal,
         setShowFixedChatListSidebar,
-        openPeoplesModalInFollowers,
+        openPeoplesModalInFriends,
     }
 }

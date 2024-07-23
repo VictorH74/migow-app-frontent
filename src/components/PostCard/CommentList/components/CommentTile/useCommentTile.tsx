@@ -1,14 +1,17 @@
-import { CommentInterface, ReplayCommentInterface } from "@/interfaces";
+/* eslint-disable react-hooks/exhaustive-deps */
+import useClientHTTP from "@/hooks/useClientHTTP";
+import { CommentInterface } from "@/interfaces/Comment";
 import React from "react";
 
 export interface CommentTileProps extends CommentInterface {
-    highlightReplayComment?: ReplayCommentInterface
+    highlightReplayComment?: CommentInterface.ReplyType
 }
 
 export default function useCommentTile(props: CommentTileProps) {
-    const [page, setPage] = React.useState<number>(0)
-    const [replayComments, setReplayComments] = React.useState<ReplayCommentInterface[]>([])
+    const [pageNumber, setPageNumber] = React.useState<number>(0)
+    const [replayComments, setReplayComments] = React.useState<CommentInterface.ReplyType[]>([])
     const [haveHighlightReplayComment, setHaveHighlightReplayComment] = React.useState(false)
+    const clientHTTP = useClientHTTP();
 
     React.useEffect(() => {
         if (props.highlightReplayComment) {
@@ -18,13 +21,9 @@ export default function useCommentTile(props: CommentTileProps) {
     }, [])
 
     const loadReplayComments = async () => {
-        // TODO: fetch replay comments (page, size)
-        // WITH CLIENTHTTP
-        /*
-        const response = await clientHTTP.fetchReplayComments(page, haveHighlightReplayComment)
-        setReplayComments(prev => [...prev, ...response])
-        setPage(prev => prev + 1)
-        */
+        const page = await clientHTTP.getAllCommentReply(props.id)
+        setReplayComments(page.content)
+        setPageNumber(prev => prev + 1)
     }
 
     return { replayComments, loadReplayComments }

@@ -1,11 +1,11 @@
 "use client"
-import { UserInterface } from "@/interfaces";
 import ModalContainer from "@/components/ModalContainer";
 import Avatar from "@/components/Avatar";
 import React from "react";
 import SymetricHorizontalButtonList from "@/components/SymetricHorizontalButtonList";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { SxProps } from "@mui/material";
+import { UserInterface } from "@/interfaces/User";
 
 interface AddNewPostModalProps {
     onClose(): void
@@ -28,7 +28,7 @@ const avatarSxProps: SxProps = {
 
 export default function AddNewPostModal(props: AddNewPostModalProps) {
     const publicBtnRef = React.useRef<HTMLButtonElement | null>(null)
-    const justFollowersBtnRef = React.useRef<HTMLButtonElement | null>(null)
+    const justFriendsBtnRef = React.useRef<HTMLButtonElement | null>(null)
     const [postVisibility, setPostVisibility] = React.useState<0 | 1>(0)
     const [videoURL, setVideoURL] = React.useState<string | undefined>()
     const [imageURLs, setImageURLs] = React.useState<string[]>([])
@@ -44,8 +44,8 @@ export default function AddNewPostModal(props: AddNewPostModalProps) {
             onClick: () => setPostVisibility(0)
         },
         {
-            ref: justFollowersBtnRef,
-            label: "Just Followers",
+            ref: justFriendsBtnRef,
+            label: "Just Friends",
             selected: postVisibility === 1,
             onClick: () => setPostVisibility(1)
         },

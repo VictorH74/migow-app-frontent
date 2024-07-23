@@ -2,6 +2,7 @@ import Avatar from "@/components/Avatar";
 import useCommentTile, { CommentTileProps } from "./useCommentTile";
 import { SxProps } from "@mui/material";
 import DisplayISODate from "@/components/DisplayDate";
+import Link from "next/link";
 
 export default function CommentTile(props: CommentTileProps) {
     const hook = useCommentTile(props)
@@ -23,16 +24,32 @@ export default function CommentTile(props: CommentTileProps) {
                     image={props.owner.profileImageUrl || props.owner.name}
                     avatarSxProps={commentAvatarSxProps}
                 />
-                <div className="bg-gray-200 px-2 pb-2 rounded-md w-full">
-                    <div className="flex items-center">
-                        <p className="leading-[35px] font-semibold">
-                            {props.owner.username}
-                        </p>
-                        <DisplayISODate ISODate={props.createdAt} />
+                <div className="w-full">
+                    <div className="bg-gray-200 px-2 pb-2 rounded-md ">
+                        <div className="flex items-center">
+                            <Link href={"/in/profile/" + props.owner.username} className="leading-[35px] font-semibold hover:underline">
+                                {props.owner.username}
+                            </Link>
+                            <DisplayISODate ISODate={props.createdAt} />
+                        </div>
+                        <p className="">{props.content}</p>
                     </div>
-                    <p className="">{props.content}</p>
+
+                    <div className="flex items-center gap-1 text-sm">
+                        <button className="hover:underline">React</button>
+                        <div className="size-1 rounded-full bg-gray-500" />
+                        <button className="hover:underline">{props.reactCount}</button>
+
+                        <div className="h-[15px] w-[1px] mx-1 bg-gray-500" />
+
+                        <button className="hover:underline">Reply</button>
+                        <div className="size-1 rounded-full bg-gray-500" />
+                        <button className="hover:underline" onClick={hook.loadReplayComments}>{props.replyCommentCount} replies</button>
+                    </div>
                 </div>
+
             </div>
+
 
             {/* reply comments */}
             <ul className="mt-2">
@@ -41,18 +58,25 @@ export default function CommentTile(props: CommentTileProps) {
                         <li key={c.id} className="pl-[40px]" >
                             <div className="flex">
                                 <Avatar
-                                    image={c.user.profileImageUrl || c.user.name}
+                                    image={c.owner.profileImageUrl || c.owner.name}
                                     avatarSxProps={replayCommentAvatarSxProps}
                                 />
-                                <div className="bg-gray-200 px-2 pb-2 rounded-md w-full">
-                                    <div className="flex items-center">
-                                        <p className="leading-[35px] font-semibold text-sm" >
-                                            {c.user.username}
-                                        </p>
-                                        <DisplayISODate ISODate={props.createdAt} />
+                                <div className="w-full">
+                                    <div className="bg-gray-200 px-2 pb-2 rounded-md ">
+                                        <div className="flex items-center">
+                                            <Link href={"/in/profile/" + c.owner.username} className="leading-[35px] font-semibold text-sm hover:underline" >
+                                                {c.owner.username}
+                                            </Link>
+                                            <DisplayISODate ISODate={props.createdAt} />
+                                        </div>
+                                        <p className="" >{c.content}</p>
                                     </div>
 
-                                    <p className="" >{c.content}</p>
+                                    <div className="border flex items-center gap-1 text-sm">
+                                        <button className="hover:underline">React</button>
+                                        <div className="size-1 rounded-full bg-gray-500" />
+                                        <button className="hover:underline">{c.reactCount}</button>
+                                    </div>
                                 </div>
                             </div>
                         </li>

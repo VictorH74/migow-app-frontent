@@ -1,6 +1,6 @@
 import { UserEventEnum } from '@/enums';
 import useMessageSegment from '@/hooks/useMessageSegment';
-import { ActivityInterface } from '@/interfaces';
+import { ActivityInterface } from '@/interfaces/Activity';
 import { activitiesMock } from '@/mockData';
 import React from 'react';
 

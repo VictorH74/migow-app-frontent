@@ -2,15 +2,17 @@ import React from 'react';
 import UserProfileImgConfig from './UserProfileImgConfig';
 import UserNameConfig from './UserNameConfig';
 import UserBioConfig from './UserBioConfig';
-import UserFollowersConfig from './UserFollowersConfig';
+import UserFriendsConfig from './UserFollowersConfig';
 import UserActivitiesConfig from './UserActivitiesConfig';
 import UserOnlineStatusConfig from './UserOnlineStatusConfig';
 import MessageReadConfirmationConfig from './MessageReadConfirmationConfig';
 import BlockedUserList from './BlockedUserList';
+import { PrivacySettingsInterface } from '@/interfaces/PrivacySettings';
+import { serverFetch } from '@/lib/actions';
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
 
-  // TODO: fetch privacySettings by user id
+  const ownerPSettings = await serverFetch<PrivacySettingsInterface>(`/u-s/settings/privacy`)
 
   return (
     <div className='w-full'>
@@ -20,7 +22,7 @@ export default function PrivacyPage() {
           <UserProfileImgConfig />
           <UserNameConfig />
           <UserBioConfig />
-          <UserFollowersConfig />
+          <UserFriendsConfig />
           <UserActivitiesConfig />
           <UserOnlineStatusConfig />
         </div>

@@ -1,8 +1,10 @@
+import { NotificationInterface } from '@/interfaces/Notification';
+import { serverFetch } from '@/lib/actions';
 import React from 'react';
 
-export default function NotificationsPage() {
+export default async function NotificationsPage() {
 
-  // TODO: fetch notificationsSettings by user id
+  const ownerNSettings = await serverFetch<NotificationInterface>(`/u-s/settings/notification`)
 
   return (
     <div className='w-full'>

@@ -1,5 +1,3 @@
-import { ChatInterface } from "@/interfaces";
-import { ChatBoxType } from "@/types";
 import React from "react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
@@ -7,9 +5,10 @@ import circleImg from "@/assets/gradient-circle-img.png"
 import CloseIcon from '@mui/icons-material/Close';
 import Avatar from "@/components/Avatar";
 import { closedChatBoxHeight, closedChatBoxWidth, openChatBoxHeight, openChatBoxWidth } from "@/components/ClientSideInLayout/ChatComponent/useChatComponent";
+import { ChatInterface } from "@/interfaces/Chat";
 
 interface ChatBoxProps {
-    chatBox: ChatBoxType
+    chatBox: ChatInterface.ChatBoxType
     onRemove(chat: string): void
     onClick(chat: string): void
 }

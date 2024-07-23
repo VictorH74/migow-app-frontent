@@ -5,9 +5,7 @@ import CardContainer from '@/components/CardContainer';
 import CardHeader from '@/components/CardContainer/CardHeader';
 import PostCard from '@/components/PostCard';
 import { UserEventEnum } from '@/enums';
-import { twMerge } from 'tailwind-merge';
 import SymetricHorizontalButtonList from '@/components/SymetricHorizontalButtonList';
-
 
 
 export default function UserActivities(props: UserActivitiesProps) {

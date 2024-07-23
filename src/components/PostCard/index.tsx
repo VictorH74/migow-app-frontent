@@ -11,6 +11,12 @@ import CardHeader from '@/components/CardContainer/CardHeader';
 import CommentList from './CommentList';
 import { twMerge } from 'tailwind-merge';
 import IconButton from '../IconButton';
+import { ErrorBoundary } from "react-error-boundary";
+import circleImg from "@/assets/gradient-circle-img.png"
+import LoadingLazyComponent from '../LoadingLazyComponent';
+
+
+const ReactionUserListModal = React.lazy(() => import('../ReactionUserListModal'))
 
 
 export default function PostCard({ showBottomActions = true, showBottomInf = true, ...props }: PostCardProps) {
@@ -80,6 +86,8 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                 {
                   Icon: AddReactionIcon,
                   count: props.reactCount,
+                  countBtnOnClick: () => hook.setShowReactionUsersModal(true),
+                  countBtnDisabled: props.reactCount === 0,
                   onClick: () => { },
                   label: "Add Reaction",
                   buttonLabelSegment: "reactions"
@@ -87,13 +95,17 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                 {
                   Icon: AddCommentIcon,
                   count: props.commentCount,
-                  onClick: hook.loadComments,
+                  countBtnOnClick: () => hook.loadComments(),
+                  countBtnDisabled: props.commentCount === 0 || hook.comments.length !== 0,
+                  onClick: () => { },
                   label: "Add Comment",
                   buttonLabelSegment: "comments"
                 },
                 {
                   Icon: ShareIcon,
                   count: props.shareCount,
+                  countBtnOnClick: () => { },
+                  countBtnDisabled: true,
                   onClick: () => { },
                   label: "Share",
                   buttonLabelSegment: "shares"
@@ -110,7 +122,8 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                   />
                   <button
                     className='text-sm font-semibold text-center text-gray-600 hover:underline w-full'
-                    disabled={btnData.count === 0}
+                    disabled={btnData.countBtnDisabled}
+                    onClick={btnData.countBtnOnClick}
                   >
                     {btnData.count} {btnData.buttonLabelSegment}
                   </button>
@@ -120,18 +133,32 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
           </div>
         )}
 
-        {props.commentCount > 0 && hook.comments.length === 0 && (
-          <CommentList
-            commentCount={props.commentCount}
-            comments={hook.comments}
-            highlightReplayComment={props.highlightReplayComment}
-            loadComments={hook.loadComments}
-          />
+        {props.commentCount > 0 && hook.comments.length !== 0 && (
+          <ErrorBoundary fallback={<p>⚠️Something went wrong</p>}>
+            <React.Suspense fallback={<LoadingCommentList />} >
+              <CommentList
+                postId={props.id}
+                commentCount={props.commentCount}
+                comments={hook.comments}
+                highlightReplayComment={props.highlightReplayComment}
+                loadComments={hook.loadComments}
+              />
+            </React.Suspense>
+          </ErrorBoundary>
         )}
 
 
 
       </div>
+      <React.Suspense fallback={<LoadingLazyComponent />}>
+        {hook.showReactionUsersModal && (<ReactionUserListModal postId={props.id} reactionTypeCounts={props.reactionTypeCounts} onClose={() => hook.setShowReactionUsersModal(false)} />)}
+      </React.Suspense>
     </CardContainer>
   );
 }
+
+const LoadingCommentList = () => (
+  <div className='p-5 grid place-items-center'>
+    <Image width={35} height={35} alt="loading circle image" src={circleImg} />
+  </div>
+)

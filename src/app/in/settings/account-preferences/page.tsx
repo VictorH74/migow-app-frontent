@@ -3,13 +3,12 @@ import ConfigTile from '../components/ConfigTile';
 import DarkModeConfig from './DarkModeConfig';
 import SoundEffectsConfig from './SoundEffectsConfig';
 import OnlineUsersCountLimitConfig from './OnlineUsersCountLimitConfig';
+import { AccountPreferenceSettingsInterface } from '@/interfaces/AccountPreferenceSettings';
+import { serverFetch } from '@/lib/actions';
 
-export default function AccountPreferencesPage() {
+export default async function AccountPreferencesPage() {
 
-  // TODO: fetch accountPreferencesSettings by user id
-  const accountPreferencesSettings = {
-    imageProfile: "all"
-  }
+  const ownerAPSettings = await serverFetch<AccountPreferenceSettingsInterface>(`/u-s/settings/account-preference`)
 
   return (
     <div className='w-full'>

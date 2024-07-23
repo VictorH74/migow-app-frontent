@@ -18,7 +18,7 @@ export default function UserActivitiesConfig() {
         },
         {
             ref: friendshipsOpButtonRef,
-            label: "Followers",
+            label: "Friends",
             onClick: () => setValue(1),
             selected: value === 1
         },

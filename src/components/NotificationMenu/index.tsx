@@ -49,7 +49,7 @@ export default function NotificationMenu(props: NotificationMenuProps) {
                   {" "}
                   {
                     hook.getNotificationSegment(
-                      notfication.userEvent,
+                      notfication.userEvent.toString(),
                       notfication.relatedTargetId.owner.name
                     )
                   }

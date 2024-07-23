@@ -3,14 +3,13 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from '@mui/icons-material/Close';
-import { ChatBoxType } from "@/types";
 import { fixedChatListSidebarWidth } from "@/components/ClientSideInLayout/ChatComponent/useChatComponent";
-import { ChatInterface } from "@/interfaces";
 import ChatListItem from "./ChatListItem";
+import { ChatInterface } from "@/interfaces/Chat";
 
 interface FixedChatListSidebarProps {
     onClose(): void
-    includeChatBoxFunc(chatbox: ChatBoxType): void
+    includeChatBoxFunc(chatbox: ChatInterface.ChatBoxType): void
     showFixedChatListSidebar: boolean
     chats: ChatInterface[] | undefined
     loadChats(): void

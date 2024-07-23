@@ -6,29 +6,18 @@ import usePopup from '@/hooks/usePopup';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import NotificationMenu from '@/components/NotificationMenu';
-import { UserInterface } from '@/interfaces';
 import Avatar from '@/components/Avatar';
 import { Josefin_Sans } from 'next/font/google'
 import { twMerge } from 'tailwind-merge';
 import { NavButtonsType } from '@/components/ClientSideInLayout/useClientSideInLayout';
 import IconButton from '@/components/IconButton';
+import { UserInterface } from '@/interfaces/User';
 
 const josefinSans = Josefin_Sans({ subsets: ["latin"], style: "italic" })
 
-
-// temp 
-const currentUser: UserInterface = {
-  id: "vvv",
-  name: "victor almeidaa",
-  username: "vyctor74",
-  createdAt: new Date().toISOString(),
-  email: "victor@emai.com",
-  friendships: []
-}
-
-
 interface HeaderProps {
   navButtons: NavButtonsType[]
+  currentUser: UserInterface.SimpleType
 }
 
 
@@ -67,7 +56,7 @@ export default function Header(props: HeaderProps) {
             onClick={profilePopup.handleClick}
           >
             <Avatar
-              image={currentUser.profileImageUrl || currentUser.name}
+              image={props.currentUser.profileImageUrl || props.currentUser.name}
               avatarSxProps={{ width: 35, height: 35, fontSize: 13 }}
             />
             Me
@@ -92,7 +81,10 @@ export default function Header(props: HeaderProps) {
             }}
           >
             <MenuItem
-              onClick={profilePopup.handleClose}
+              onClick={() => {
+                hook.router.replace(`/in/profile/${props.currentUser.username}`)
+                profilePopup.handleClose()
+              }}
             >
               See profile
             </MenuItem>

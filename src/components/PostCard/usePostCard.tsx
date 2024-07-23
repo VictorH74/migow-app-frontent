@@ -1,6 +1,7 @@
-import { CommentInterface, ReplayCommentInterface, PostInterface } from '@/interfaces';
-import { commentsMock } from '@/mockData';
-import { ResponsePageType } from '@/types';
+/* eslint-disable react-hooks/exhaustive-deps */
+import useClientHTTP from '@/hooks/useClientHTTP';
+import { CommentInterface } from '@/interfaces/Comment';
+import { PostInterface } from '@/interfaces/Post';
 import React from 'react';
 
 export interface PostCardProps extends PostInterface {
@@ -8,7 +9,7 @@ export interface PostCardProps extends PostInterface {
   showBottomActions?: boolean
   showBottomInf?: boolean
   highlightComment?: CommentInterface,
-  highlightReplayComment?: ReplayCommentInterface
+  highlightReplayComment?: CommentInterface.ReplyType
   fromActivity?: boolean
 
 }
@@ -16,42 +17,31 @@ export interface PostCardProps extends PostInterface {
 export const commentPageLimit = 10
 
 export default function usePostCard(props: PostCardProps) {
-  const [page, setPage] = React.useState<number>(0)
+  const [showReactionUsersModal, setShowReactionUsersModal] = React.useState(false)
+  const [pageNumber, setPageNumber] = React.useState<number>(0)
   const [comments, setComments] = React.useState<CommentInterface[]>([])
-  const [highlightCommentId, setHighlightComment] = React.useState<string | undefined>(undefined)
+  const [highlightCommentId, setHighlightCommentId] = React.useState<string | undefined>(undefined)
+  const clientHTTP = useClientHTTP();
 
   const recoveredAllComments = React.useMemo(() => comments.length >= props.commentCount, [comments, props.commentCount])
 
   React.useEffect(() => {
     if (props.highlightComment) {
       setComments([props.highlightComment!])
-      setHighlightComment(props.highlightComment!.id)
+      setHighlightCommentId(props.highlightComment!.id)
     } else if (props.highlightReplayComment) {
-      setComments([props.highlightReplayComment!.comment])
-      setHighlightComment(props.highlightReplayComment!.comment.id)
+      clientHTTP.getCommentById(props.highlightReplayComment!.comment).then(comment => {
+        setComments([comment])
+        setHighlightCommentId(props.highlightReplayComment!.comment)
+      })
     }
-  }, [])
+  }, [props.highlightComment, props.highlightReplayComment, clientHTTP])
 
-  const loadComments = async () => {
-    // TODO: fetch comments (page, size)
-    // WITH CLIENTHTTP
-    /*
-    const response = await clientHTTP.fetchComments(props.id, page, commentPageLimit,haveHighlightComment)
-    setComments(prev => [...prev, ...response])
-    setPage(prev => prev + 1)
-    */
-    // WITH FETCH
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/p-s/comments/${props.id}`)
-    const page = (await res.json()) as ResponsePageType<CommentInterface>
+  const loadComments = React.useCallback(async (endDate: string = "") => {
+    const page = await clientHTTP.getAllPostComment(props.id, { endDate })
     setComments(prev => [...prev, ...page.content])
-    setPage(prev => prev + 1)
+    setPageNumber(prev => prev + 1)
+  }, [props.id])
 
-    // const response = commentsMock.filter(
-    //   c => c.post.id === props.id && c.id !== highlightCommentId
-    // ).slice(page * commentPageLimit, page * commentPageLimit + commentPageLimit)
-    // setComments(prev => [...prev, ...response])
-    // setPage(prev => prev + 1)
-  }
-
-  return { comments, loadComments, page, recoveredAllComments }
+  return { comments, loadComments, pageNumber, recoveredAllComments, showReactionUsersModal, setShowReactionUsersModal }
 }

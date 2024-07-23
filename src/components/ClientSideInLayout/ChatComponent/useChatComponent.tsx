@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react"
-import { ChatBoxType } from "@/types";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material";
-import { ChatInterface } from "@/interfaces";
 import { chatsMock } from "@/mockData";
+import { ChatInterface } from "@/interfaces/Chat";
 
 export const fixedChatListSidebarWidth = 400
 export const openChatBoxHeight = 600
@@ -28,7 +27,7 @@ export interface ChatComponentProps {
 
 export default function useChatComponent(props: ChatComponentProps) {
     const [chats, setChats] = React.useState<ChatInterface[] | undefined>()
-    const [chatBoxes, setChatBoxes] = React.useState<ChatBoxType[]>([])
+    const [chatBoxes, setChatBoxes] = React.useState<ChatInterface.ChatBoxType[]>([])
     const [isMounted, setIsMounted] = React.useState(false)
 
     React.useEffect(() => {
@@ -42,7 +41,7 @@ export default function useChatComponent(props: ChatComponentProps) {
         setChats(chatsMock)
     }
 
-    const getChatBoxesWidthCalc = (predicate?: (chatBox: ChatBoxType) => boolean | undefined) => {
+    const getChatBoxesWidthCalc = (predicate?: (chatBox: ChatInterface.ChatBoxType) => boolean | undefined) => {
         return chatBoxes.reduce((currentTotal, chatBox) => {
             return currentTotal + ((predicate ? predicate(chatBox) : chatBox.isOpen) ? openChatBoxWidth : closedChatBoxWidth)
         }, 0)
@@ -55,12 +54,12 @@ export default function useChatComponent(props: ChatComponentProps) {
         return futureChatBoxesWidthCalc <= chatBoxListContainerRef.current!.offsetWidth;
     }
 
-    const includeChatBox = React.useCallback(async (chatBox: ChatBoxType) => {
+    const includeChatBox = React.useCallback(async (chatBox: ChatInterface.ChatBoxType) => {
         const chatBoxWithSpecifiedChatId = chatBoxes.find(_chatBox => _chatBox.chatId === chatBox.chatId)
         if (!!chatBoxWithSpecifiedChatId)
             return (chatBoxWithSpecifiedChatId.isOpen ? closeChatBox : openChatBox)(chatBox.chatId)
 
-        const newChatBox: ChatBoxType = { ...chatBox, isOpen: true }
+        const newChatBox: ChatInterface.ChatBoxType = { ...chatBox, isOpen: true }
 
         const chatBoxesWidthCalc = getChatBoxesWidthCalc()
         // const chatBoxesWidthCalc = getChatBoxesWidthCalc(chatBox => chatBox.isOpen)
@@ -70,7 +69,7 @@ export default function useChatComponent(props: ChatComponentProps) {
 
         let newChatBoxIncluded = false
         // close chat boxes until a new chat box is possible
-        const openChatBoxesObj: Record<string, ChatBoxType> = {}
+        const openChatBoxesObj: Record<string, ChatInterface.ChatBoxType> = {}
         for (let i = 0; i < chatBoxes.length; i++) {
             if (chatBoxes[i].isOpen) openChatBoxesObj[chatBoxes[i].chatId] = chatBoxes[i]
 

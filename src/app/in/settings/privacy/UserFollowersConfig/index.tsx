@@ -3,7 +3,7 @@ import React from "react"
 import ConfigTile from "../../components/ConfigTile"
 import { twMerge } from "tailwind-merge"
 
-export default function UserFollowersConfig() {
+export default function UserFriendsConfig() {
     const [value, setValue] = React.useState(0)
     const allOpButtonRef = React.useRef<HTMLButtonElement>(null);
     const friendshipsOpButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -18,7 +18,7 @@ export default function UserFollowersConfig() {
         },
         {
             ref: friendshipsOpButtonRef,
-            label: "Followers",
+            label: "Friends",
             onClick: () => setValue(1),
             selected: value === 1
         },
@@ -32,7 +32,7 @@ export default function UserFollowersConfig() {
 
     return (
         <ConfigTile
-            label='Followers'
+            label='Friends'
             formContent={
                 <div className="my-3 flex gap-1 min-w-[300px] rounded-md overflow-hidden">
                     {

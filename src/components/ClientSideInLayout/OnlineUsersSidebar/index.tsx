@@ -20,7 +20,7 @@ const sxProps: SxProps = {
 
 interface OnlineUsersSidebarProps {
     incrementRight: boolean
-    openPeoplesModalInFollowers(): void
+    openPeoplesModalInFriends(): void
 }
 
 // TODO: Include friendships list with online users on top
@@ -103,7 +103,7 @@ export default function OnlineUsersSidebar(props: OnlineUsersSidebarProps) {
             ))}
             <button
                 className="size-[50px] mx-auto rounded-full bg-gray-600 text-white font-semibold"
-                onClick={props.openPeoplesModalInFollowers}
+                onClick={props.openPeoplesModalInFriends}
             >
                 +{hook.onlineUsersCount}
             </button>

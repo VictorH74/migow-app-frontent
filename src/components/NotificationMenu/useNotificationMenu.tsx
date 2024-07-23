@@ -2,7 +2,7 @@
 import { UserEventEnum } from '@/enums';
 import useMessageSegment from '@/hooks/useMessageSegment';
 import usePopup from '@/hooks/usePopup';
-import { NotificationInterface } from '@/interfaces';
+import { NotificationInterface } from '@/interfaces/Notification';
 import { notificationsMock } from '@/mockData';
 import React from 'react';
 

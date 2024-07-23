@@ -1,9 +1,9 @@
-import { OnlineUserInterface } from "@/interfaces"
+import { UserInterface } from "@/interfaces/User"
 import { onlineUsersMock } from "@/mockData"
 import React from "react"
 
 interface ResponseInterface {
-    content: OnlineUserInterface[]
+    content: UserInterface.OnlineUserType[]
     onlineUsersCount: number
 }
 
@@ -15,7 +15,7 @@ const response: ResponseInterface = {
 export const OnlineFollowerBtnSize = 50;
 
 export default function useOnlineUsersSidebar() {
-    const [onlineUsers, setOnlineUsers] = React.useState<OnlineUserInterface[]>([])
+    const [onlineUsers, setOnlineUsers] = React.useState<UserInterface.OnlineUserType[]>([])
     const [onlineUsersCount, setOnlineUsersCount] = React.useState(0)
 
     React.useEffect(() => {
