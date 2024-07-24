@@ -2,14 +2,16 @@
 import Avatar from "@/components/Avatar"
 import TextArea from "@/components/TextArea"
 import useClientHTTP from "@/hooks/useClientHTTP"
-import { CommentInterface } from "@/interfaces/Comment"
 import { UserInterface } from "@/interfaces/User"
 import { serverFetch } from "@/lib/actions"
+import { SxProps } from "@mui/material"
 import React from "react"
+import { twMerge } from "tailwind-merge"
 
 interface CreateCommentInputProps {
-    postId: string
-    setComments: React.Dispatch<React.SetStateAction<CommentInterface[]>>
+    newCommentFunc: (content: string) => Promise<void>
+    containerClassname?: string
+    avatarSxProps?: SxProps
 }
 
 export default function CreateCommentInput(props: CreateCommentInputProps) {
@@ -24,18 +26,19 @@ export default function CreateCommentInput(props: CreateCommentInputProps) {
     }, [])
 
     const createComment = async () => {
-        const createdComment = await clientHTTP.createComment({ content: commentInputValue, postId: props.postId })
-        props.setComments(prev => [createdComment, ...prev])
+        await props.newCommentFunc(commentInputValue)
         setCommentInputValue("")
     }
 
     return (
-        <div className="flex px-4">
+        <div className={twMerge("flex", props.containerClassname)}>
             <Avatar
                 image={avatarValue}
                 avatarSxProps={{
                     width: 35,
-                    height: 35
+                    height: 35,
+                    fontSize: 15,
+                    ...props.avatarSxProps
                 }}
             />
 

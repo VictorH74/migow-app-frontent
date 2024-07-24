@@ -46,7 +46,7 @@ export default function UserActivities(props: UserActivitiesProps) {
 
             {
               UserEventEnum.COMMENT_REPLAY === a.userEvent && (
-                <PostCard {...a.post} highlightReplayComment={a.commentReply!} fromActivity />
+                <PostCard {...a.post} highlightReplyComment={a.commentReply!} fromActivity />
               )
             }
 

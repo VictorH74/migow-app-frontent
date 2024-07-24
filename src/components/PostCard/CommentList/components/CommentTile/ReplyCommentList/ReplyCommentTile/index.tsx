@@ -6,25 +6,20 @@ import { CommentInterface } from "@/interfaces/Comment";
 import { SxProps } from "@mui/material";
 import Link from "next/link";
 import React from "react";
+import { replyCommentAvatarSxProps } from "../..";
 
 
 interface ReplyCommentTileProps extends CommentInterface.ReplyType { }
-
-const replayCommentAvatarSxProps: SxProps = {
-    width: 25,
-    height: 25,
-    fontSize: 12
-}
 
 export default function ReplyCommentTile(props: ReplyCommentTileProps) {
     const [showReactionUsersModal, setShowReactionUsersModal] = React.useState(false)
 
     return (
-        <li className="pl-[40px]" >
+        <li >
             <div className="flex">
                 <Avatar
                     image={props.owner.profileImageUrl || props.owner.name}
-                    avatarSxProps={replayCommentAvatarSxProps}
+                    avatarSxProps={replyCommentAvatarSxProps}
                 />
                 <div className="w-full">
                     <div className="bg-gray-200 px-2 pb-2 rounded-md ">

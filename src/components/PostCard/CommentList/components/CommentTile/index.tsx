@@ -7,18 +7,26 @@ import ReplyCommentList from "./ReplyCommentList";
 import React from "react";
 import LoadingLazyComponent from "@/components/LoadingLazyComponent";
 import ReactionUserListModal from "@/components/ReactionUserListModal";
+import CreateCommentInput from "../CreateCommentInput";
 
 
 const commentAvatarSxProps: SxProps = {
     width: 35,
-    height: 35
+    height: 35,
+    fontSize: 15
+}
+
+export const replyCommentAvatarSxProps: SxProps = {
+    width: 30,
+    height: 30,
+    fontSize: 13
 }
 
 export default function CommentTile(props: CommentTileProps) {
     const hook = useCommentTile(props)
 
     return (
-        <li className="px-4">
+        <li>
             <div className="flex">
                 <Avatar
                     image={props.owner.profileImageUrl || props.owner.name}
@@ -52,7 +60,12 @@ export default function CommentTile(props: CommentTileProps) {
 
                         <div className="h-[15px] w-[1px] mx-1 bg-gray-500" />
 
-                        <button className="hover:underline">Reply</button>
+                        <button
+                            className="hover:underline"
+                            onClick={() => hook.setShowReplyInput(true)}
+                        >
+                            Reply
+                        </button>
                         <div className="size-1 rounded-full bg-gray-500" />
                         <button
                             className="hover:underline"
@@ -66,14 +79,29 @@ export default function CommentTile(props: CommentTileProps) {
 
             </div>
 
-            {hook.showReplyComments && (
-                <ReplyCommentList
-                    commentId={props.id}
-                    replyComments={hook.replayComments}
-                    // highlightReplayComment={props.highlightReplayComment}
-                    loadReplyComments={hook.loadMoreReplyComments}
-                />
-            )}
+
+
+            <div className="pl-[40px]">
+                {
+                    hook.showReplyInput && (
+                        <CreateCommentInput
+                            avatarSxProps={{...replyCommentAvatarSxProps, marginTop: 0.5}}
+                            containerClassname="mt-2"
+                            newCommentFunc={hook.addNewComment}
+                        />
+                    )
+                }
+                {hook.showReplyComments && (
+                    <ReplyCommentList
+                        commentId={props.id}
+                        replyComments={hook.replyComments}
+                        // highlightReplyComment={props.highlightReplyComment}
+                        loadReplyComments={hook.loadMoreReplyComments}
+                    />
+                )}
+            </div>
+
+
 
             <React.Suspense fallback={<LoadingLazyComponent />}>
                 {hook.showReactionUsersModal && (

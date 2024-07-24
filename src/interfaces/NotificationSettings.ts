@@ -3,6 +3,6 @@ export interface NotificationSettingsInterface {
     whenFriendsPostSomething: number
     whenFriendsCommentSomethig: number
     whenFriendsReactSomething: number
-    whenFriendsReplaySomething: number
+    whenFriendsReplySomething: number
     whenFriendsMentionMe: number
 }

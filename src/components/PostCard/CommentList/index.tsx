@@ -10,7 +10,7 @@ interface CommentListProps {
     postId: string
     comments: CommentInterface[]
     commentCount: number
-    highlightReplayComment?: CommentInterface.ReplyType
+    highlightReplyComment?: CommentInterface.ReplyType
     loadComments(endDate: string): () => Promise<void>
 }
 
@@ -30,13 +30,13 @@ export default React.memo(function CommentList(props: CommentListProps) {
 
     return (
         <>
-            <ul className="">
+            <ul className="flex flex-col gap-3">
                 {props.comments.map(c => (
-                    <CommentTile key={c.id} {...c} highlightReplayComment={c.id === props.highlightReplayComment?.comment ? props.highlightReplayComment : undefined} />
+                    <CommentTile key={c.id} {...c} highlightReplyComment={c.id === props.highlightReplyComment?.comment ? props.highlightReplyComment : undefined} />
                 ))}
             </ul>
             {props.comments.length > 0 && props.comments.length < props.commentCount && (
-                <button className="font-semibold hover:underline" onClick={() => props.loadComments(initialDataDate)}>Load more 10 comments</button>
+                <button className="font-semibold hover:underline m-auto w-full" onClick={props.loadComments(initialDataDate)}>Load more 10 comments</button>
             )}
         </>
 

@@ -10,7 +10,7 @@ export interface PostCardProps extends PostInterface {
   showBottomActions?: boolean
   showBottomInf?: boolean
   highlightComment?: CommentInterface,
-  highlightReplayComment?: CommentInterface.ReplyType
+  highlightReplyComment?: CommentInterface.ReplyType
   fromActivity?: boolean
 
 }
@@ -33,13 +33,13 @@ export default function usePostCard(props: PostCardProps) {
   //   if (props.highlightComment) {
   //     setComments([props.highlightComment!])
   //     setHighlightCommentId(props.highlightComment!.id)
-  //   } else if (props.highlightReplayComment) {
-  //     clientHTTP.getCommentById(props.highlightReplayComment!.comment).then(comment => {
+  //   } else if (props.highlightReplyComment) {
+  //     clientHTTP.getCommentById(props.highlightReplyComment!.comment).then(comment => {
   //       setComments([comment])
-  //       setHighlightCommentId(props.highlightReplayComment!.comment)
+  //       setHighlightCommentId(props.highlightReplyComment!.comment)
   //     })
   //   }
-  // }, [props.highlightComment, props.highlightReplayComment, clientHTTP])
+  // }, [props.highlightComment, props.highlightReplyComment, clientHTTP])
 
   const loadComments = React.useCallback(async (pagination?: ResponsePageInterface.PaginationType, cb?: (comments: CommentInterface[]) => void) => {
     clientHTTP.getAllPostComment(props.id, pagination).then(page => {
@@ -55,6 +55,11 @@ export default function usePostCard(props: PostCardProps) {
     endDate
   }, comments => setComments(prev => [...prev, ...comments]))
 
+  const addNewComment = async (content: string) => {
+    const createdComment = await clientHTTP.createComment({ content, postId: props.id })
+    setComments(prev => [createdComment, ...prev])
+  }
+
   return {
     comments,
     setComments,
@@ -66,5 +71,6 @@ export default function usePostCard(props: PostCardProps) {
     showComments,
     setShowComments,
     isLoadingInitialData,
+    addNewComment
   }
 }

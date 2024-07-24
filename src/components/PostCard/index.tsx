@@ -133,17 +133,21 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
             </div>
           )}
 
-          <CreateCommentInput postId={props.id} setComments={hook.setComments} />
+          <div className='px-4'>
+            <CreateCommentInput avatarSxProps={{marginTop: 0.3}} containerClassname='mb-2' newCommentFunc={hook.addNewComment} />
+            {hook.showComments && (
+              <CommentList
+                postId={props.id}
+                commentCount={props.commentCount}
+                comments={hook.comments}
+                highlightReplyComment={props.highlightReplyComment}
+                loadComments={hook.loadMoreComments}
+              />
+            )}
+          </div>
 
-          {hook.showComments && (
-            <CommentList
-              postId={props.id}
-              commentCount={props.commentCount}
-              comments={hook.comments}
-              highlightReplayComment={props.highlightReplayComment}
-              loadComments={hook.loadMoreComments}
-            />
-          )}
+
+
 
         </div>
         <React.Suspense fallback={<LoadingLazyComponent />}>

@@ -5,7 +5,7 @@ import { ResponsePageInterface } from "@/interfaces/ResponsePage";
 import React from "react";
 
 export interface CommentTileProps extends CommentInterface {
-  highlightReplayComment?: CommentInterface.ReplyType
+  highlightReplyComment?: CommentInterface.ReplyType
 }
 
 export default function useCommentTile(props: CommentTileProps) {
@@ -13,31 +13,40 @@ export default function useCommentTile(props: CommentTileProps) {
   const [pageNumber, setPageNumber] = React.useState<number>(0)
   const [pageSize, setPageSize] = React.useState<number>(10)
   const [showReplyComments, setShowReplyComments] = React.useState(false)
-  const [replayComments, setReplayComments] = React.useState<CommentInterface.ReplyType[]>([])
-  // const [haveHighlightReplayComment, setHaveHighlightReplayComment] = React.useState(false)
+  const [showReplyInput, setShowReplyInput] = React.useState(false)
+  const [replyComments, setReplyComments] = React.useState<CommentInterface.ReplyType[]>([])
+  // const [haveHighlightReplyComment, setHaveHighlightReplyComment] = React.useState(false)
   const clientHTTP = useClientHTTP();
 
-  const loadReplayComments = React.useCallback(async (pagination?: ResponsePageInterface.PaginationType, cb?: (replies: CommentInterface.ReplyType[]) => void) => {
+  const loadReplyComments = React.useCallback(async (pagination?: ResponsePageInterface.PaginationType, cb?: (replies: CommentInterface.ReplyType[]) => void) => {
     console.log("xxxx")
     clientHTTP.getAllCommentReply(props.id, pagination).then(page => {
       setPageNumber(page.pageable.pageNumber + 1)
       setPageSize(page.pageable.pageSize)
       if (cb) return cb(page.content);
-      setReplayComments(page.content)
+      setReplyComments(page.content)
     })
   }, [clientHTTP])
 
-  const loadMoreReplyComments = (endDate: string) => () => loadReplayComments({
+  const loadMoreReplyComments = (endDate: string) => () => loadReplyComments({
     pageNumber,
     endDate
-  }, replies => setReplayComments(prev => [...prev, ...replies]))
+  }, replies => setReplyComments(prev => [...prev, ...replies]))
+
+  const addNewComment = async (content: string) => {
+    const createdComment = await clientHTTP.createReplyComment({ content, commentId: props.id })
+    setReplyComments(prev => [createdComment, ...prev])
+  }
 
   return {
-    replayComments,
+    replyComments,
     loadMoreReplyComments,
     showReplyComments,
     setShowReplyComments,
     showReactionUsersModal,
     setShowReactionUsersModal,
+    showReplyInput,
+    setShowReplyInput,
+    addNewComment
   }
 }
