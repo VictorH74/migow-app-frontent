@@ -6,6 +6,7 @@ import SymetricHorizontalButtonList from "@/components/SymetricHorizontalButtonL
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { SxProps } from "@mui/material";
 import { UserInterface } from "@/interfaces/User";
+import usePostArray from "@/hooks/usePostArray";
 
 interface AddNewPostModalProps {
     onClose(): void
@@ -29,12 +30,12 @@ const avatarSxProps: SxProps = {
 export default function AddNewPostModal(props: AddNewPostModalProps) {
     const publicBtnRef = React.useRef<HTMLButtonElement | null>(null)
     const justFriendsBtnRef = React.useRef<HTMLButtonElement | null>(null)
+    const textareRef = React.useRef<HTMLTextAreaElement>(null);
+
     const [postVisibility, setPostVisibility] = React.useState<0 | 1>(0)
     const [videoURL, setVideoURL] = React.useState<string | undefined>()
     const [imageURLs, setImageURLs] = React.useState<string[]>([])
-
     const [content, setContent] = React.useState("");
-    const textareRef = React.useRef<HTMLTextAreaElement>(null);
 
     const btnData = React.useMemo(() => [
         {
@@ -50,6 +51,8 @@ export default function AddNewPostModal(props: AddNewPostModalProps) {
             onClick: () => setPostVisibility(1)
         },
     ], [postVisibility])
+
+    const { setPosts } = usePostArray()
 
     React.useEffect(() => {
         if (textareRef.current && !content) {
