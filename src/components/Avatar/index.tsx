@@ -4,7 +4,7 @@ import MuiAvatar from "@mui/material/Avatar";
 import { twMerge } from "tailwind-merge";
 
 interface AvatarProp {
-    image: string
+    image?: string
     avatarSxProps?: SxProps
     className?: string
 }
@@ -12,6 +12,8 @@ interface AvatarProp {
 export default function Avatar(props: AvatarProp) {
 
     const getImageProp = () => {
+        if (!props.image) return {}
+
         try {
             new URL(props.image)
             return ({

@@ -1,9 +1,9 @@
 import { CommentInterface } from "@/interfaces/Comment";
 import CommentTile from "./components/CommentTile";
-import React, { use } from "react";
-import { serverFetch } from "@/lib/actions";
-import { UserInterface } from "@/interfaces/User";
-import CreateCommentInput from "./components/CreateCommentInput";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import circleImg from "@/assets/gradient-circle-img.png"
+import Image from "next/image";
 
 
 interface CommentListProps {
@@ -11,18 +11,26 @@ interface CommentListProps {
     comments: CommentInterface[]
     commentCount: number
     highlightReplayComment?: CommentInterface.ReplyType
-    loadComments(endDate?: string): void
+    loadComments(endDate: string): () => Promise<void>
 }
 
 export default React.memo(function CommentList(props: CommentListProps) {
-    const currentUser = use(serverFetch<UserInterface.SimpleType>("/u-s/users/{tokenUserId}"))
     const initialDataDate = React.useMemo(() => new Date().toISOString(), [])
+    const { isLoading } = useQuery({
+        queryKey: [props.postId + '-comments'],
+        queryFn: props.loadComments(initialDataDate),
+        retry: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        refetchInterval: false
+    })
+
+    if (isLoading) return <CommentListLoading />
 
     return (
         <>
             <ul className="">
-                <CreateCommentInput postId={props.postId} avatarValue={currentUser.profileImageUrl || currentUser.name} />
-
                 {props.comments.map(c => (
                     <CommentTile key={c.id} {...c} highlightReplayComment={c.id === props.highlightReplayComment?.comment ? props.highlightReplayComment : undefined} />
                 ))}
@@ -34,3 +42,9 @@ export default React.memo(function CommentList(props: CommentListProps) {
 
     )
 })
+
+const CommentListLoading = () => (
+    <div className='p-5 grid place-items-center'>
+      <Image width={35} height={35} alt="loading circle image" src={circleImg} />
+    </div>
+  )

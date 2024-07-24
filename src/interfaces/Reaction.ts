@@ -5,7 +5,7 @@ export interface ReactionInterface extends UserGenericProperty {
 }
 
 export namespace ReactionInterface {
-    export type TargetType = `post_${string}` | `comment_${string}` | `reply_comment_${string}`
+    export type TargetType = `${"post" | "comment" | "reply_comment"}_${string}`
 
     export type ReactionTypeCountsType = {
         likeReaction: number

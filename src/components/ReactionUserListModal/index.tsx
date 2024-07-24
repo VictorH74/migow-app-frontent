@@ -12,7 +12,7 @@ import Link from "next/link";
 interface ReactionUserListModalProps {
     onClose(): void
     reactionTypeCounts: ReactionInterface.ReactionTypeCountsType
-    postId: string
+    target: ReactionInterface.TargetType
 }
 
 export default function ReactionUserListModal(props: ReactionUserListModalProps) {
@@ -46,13 +46,13 @@ export default function ReactionUserListModal(props: ReactionUserListModalProps)
                 tabGenerateArray={[
                     {
                         label: "All",
-                        queryFunc: (usernamePrefix) => clientHTTP.getAllReactionUser(`post_${props.postId}`, usernamePrefix)
+                        queryFunc: (usernamePrefix) => clientHTTP.getAllReactionUser(props.target, usernamePrefix)
                     },
                     ...(tabArray.length > 1 ? tabArray.map(obj => ({
                         label: reaction[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].name,
                         queryFunc: (usernamePrefix: string) => clientHTTP
                             .getAllReactionUser(
-                                `post_${props.postId}`,
+                                props.target,
                                 usernamePrefix,
                                 reaction[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].type,
                             )

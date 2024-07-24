@@ -48,33 +48,44 @@ export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
 
     getAllFriendPost(filter: GetAllPostFilterType, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<PostInterface>> {
         return serverFetch<ResponsePageInterface<PostInterface>>(
-            `/p-s/posts/${filter}?${parsePaginationToParams(pagination)}`)
+            `/p-s/posts/${filter}?${parsePaginationToParams(pagination)}`, { next: { tags: [filter + '-posts'] } })
     }
     getAllPostComment(postId: string, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<CommentInterface>> {
         return serverFetch<ResponsePageInterface<CommentInterface>>(
-            `/p-s/comments/${postId}?${parsePaginationToParams(pagination)}`)
+            `/p-s/comments/${postId}?${parsePaginationToParams(pagination)}`, { next: { tags: [postId + "-comments"] } })
     }
     getAllCommentReply(commentId: string, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<CommentInterface.ReplyType>> {
         return serverFetch<ResponsePageInterface<CommentInterface.ReplyType>>(
-            `/p-s/reply-comments/${commentId}?${parsePaginationToParams(pagination)}`)
+            `/p-s/reply-comments/${commentId}?${parsePaginationToParams(pagination)}`, { next: { tags: [commentId + "-replies"] } })
     }
 
     createPost(post: PostInterface.CreateType): Promise<PostInterface> {
+
+        const { mediaURLs } = post
+        // TODO: upload media list to firebase
+
         return serverFetch<PostInterface>(`/p-s/posts`, {
-            headers: {'Content-Type': 'application/json'},
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(post)
         })
     }
-    createComment(comment: CommentInterface.CreateType): Promise<CommentInterface> {
-        return serverFetch<CommentInterface>(`/p-s/comments`, {
-            headers: {'Content-Type': 'application/json'},
+
+    async createComment(comment: CommentInterface.CreateType): Promise<CommentInterface> {
+        const createdComment = await serverFetch<CommentInterface>(`/p-s/comments`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(comment)
-        })
+        },
+            comment.postId + "-comments"
+        )
+        return createdComment;
     }
     createReplyComment(reply: CommentInterface.CreateReplyType): Promise<CommentInterface.ReplyType> {
         return serverFetch<CommentInterface.ReplyType>(`/p-s/reply-comments`, {
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(reply)
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(reply),
         })
     }
 

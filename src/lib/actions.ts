@@ -1,5 +1,6 @@
 'use server'
 import { jwtDecode } from "jwt-decode";
+import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation";
 
@@ -24,7 +25,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
             }
         })).json())
 
-        if (res.message) return res as {message: string, status: number}
+        if (res.message) return res as { message: string, status: number }
 
         const token = res as TokenType
 
@@ -46,17 +47,20 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 
 const getIdFromtoken = (token: string) => (jwtDecode(token).sub) as string;
 
-export async function serverFetch<T>(url: `/${string}`, init?: RequestInit) {
+export async function serverFetch<T>(url: `/${string}`, init?: RequestInit, tagToRevalidate?: string) {
     const ownerToken = cookies().get("accessToken");
+
+    console.log(init)
 
     const res = await fetch(process.env.NEXT_PUBLIC_API_GATEWAY_URL + url.replaceAll("{tokenUserId}", getIdFromtoken(ownerToken!.value)),
         {
-            headers: { "Authorization": `Bearer ${ownerToken?.value!}` }
-            , ...init
+            ...init,
+            headers: { ...init?.headers, "Authorization": `Bearer ${ownerToken?.value!}` }
         }
     );
 
     const data = await res.json();
+    if (!!tagToRevalidate) revalidateTag(tagToRevalidate)
     return data as T;
 }
 
