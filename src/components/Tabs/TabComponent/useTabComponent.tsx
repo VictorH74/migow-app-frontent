@@ -4,7 +4,7 @@ import { ResponsePageInterface } from "@/interfaces/ResponsePage";
 import React from "react";
 
 export interface TabComponentProps<UserT> {
-    children(user: UserT): React.ReactNode;
+    children(user: UserT, setUsers: React.Dispatch<React.SetStateAction<UserT[]>>): React.ReactNode;
     queryFunc(inputValue: string): Promise<ResponsePageInterface<UserT>>
     tabIndex: number;
     currentTabIndex: number;
@@ -14,22 +14,25 @@ export interface TabComponentProps<UserT> {
 // TODO: implements infinity scroll
 export default function useTabComponent<UserT>(props: TabComponentProps<UserT>) {
     const inputRef = React.useRef<HTMLInputElement>(null)
-    const [loading, setLoading] = React.useState(true)
+    const [loadingUsers, setLoadingUsers] = React.useState(true)
     const [inputValue, setInputValue] = React.useState("")
     const [pageNumber, setPageNumber] = React.useState(0)
     const [pageSize, setPageSize] = React.useState(10)
     const debounce = useDebounce();
     const [users, setUsers] = React.useState<UserT[]>([])
+    const [initial, setInitial] = React.useState(true);
 
     React.useEffect(() => {
-        if (props.currentTabIndex === props.tabIndex && users.length === 0) findUsers()
+        if (props.currentTabIndex === props.tabIndex) findUsers()
     }, [props.currentTabIndex])
 
     React.useEffect(() => {
-        if (inputValue && props.currentTabIndex === props.tabIndex) {
+        if (!initial && props.currentTabIndex === props.tabIndex) {
             setPageNumber(0)
-            debounce(findUsers, 300);
+            debounce(findUsers, 400);
+            return;
         }
+        setInitial(false)
     }, [inputValue])
 
     React.useEffect(() => {
@@ -38,14 +41,14 @@ export default function useTabComponent<UserT>(props: TabComponentProps<UserT>) 
     }, [pageNumber, pageSize])
 
     const findUsers = async (includesRetrievedUsers?: boolean) => {
-        setLoading(true)
+        setLoadingUsers(true)
 
 
         const retrievedUsers = await props.queryFunc(inputValue);
 
         includesRetrievedUsers ? setUsers(prev => [...prev, ...retrievedUsers.content]) : setUsers(retrievedUsers.content)
 
-        setLoading(false)
+        setLoadingUsers(false)
 
         inputRef.current?.focus()
     }
@@ -57,7 +60,8 @@ export default function useTabComponent<UserT>(props: TabComponentProps<UserT>) 
     return {
         inputValue,
         handleInputValueChange,
-        loading,
+        loadingUsers,
         users,
+        setUsers,
     }
 }

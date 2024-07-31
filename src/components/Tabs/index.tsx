@@ -14,7 +14,7 @@ function a11yProps(index: number) {
 
 interface TabsProps<UserT> {
     initialTabIndex?: number,
-    generateChildren(user: UserT): React.ReactElement
+    generateChildren(user: UserT, currentTabIndex: number, setUsers: React.Dispatch<React.SetStateAction<UserT[]>>): React.ReactElement
     tabGenerateArray: { label: string, queryFunc(inputValue: string): Promise<ResponsePageInterface<UserT>> }[]
 
 }
@@ -48,7 +48,7 @@ export default function Tabs<UserT>(props: TabsProps<UserT>) {
                     currentTabIndex={tabIndex}
                     queryFunc={data.queryFunc}
                 >
-                    {(user) => props.generateChildren(user)}
+                    {(user, setUsers) => props.generateChildren(user, index, setUsers)}
                 </TabComponent>
             ))}
         </div>

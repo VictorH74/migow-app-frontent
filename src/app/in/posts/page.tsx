@@ -4,6 +4,7 @@ import usePostArray from '@/hooks/usePostArray';
 import PostCard from '@/components/PostCard';
 
 // TODO: posts list infinity scroll
+// TODO: display mensssage if post array is empty: You don't have any friend! \n Search your friend to see them posts
 export default function PostsPage() {
   const { posts } = usePostArray();
 

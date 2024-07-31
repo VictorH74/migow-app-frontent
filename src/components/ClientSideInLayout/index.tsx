@@ -33,7 +33,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
             </React.Suspense>
 
             <React.Suspense fallback={<LoadingLazyComponent />}>
-                {hook.peoplesModalStatus !== "hidden" && (<PeoplesModal peoplesModalStatus={hook.peoplesModalStatus} onClose={() => hook.setPeoplesModalStatus("hidden")} />)}
+                {hook.peoplesModalStatus !== "hidden" && (<PeoplesModal currentUser={props.currentUser} peoplesModalStatus={hook.peoplesModalStatus} onClose={() => hook.setPeoplesModalStatus("hidden")} />)}
             </React.Suspense>
 
             <ChatComponent

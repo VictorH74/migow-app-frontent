@@ -13,6 +13,7 @@ import { twMerge } from 'tailwind-merge';
 import IconButton from '../IconButton';
 import LoadingLazyComponent from '../LoadingLazyComponent';
 import CreateCommentInput from './CommentList/components/CreateCommentInput';
+import ReactionEmojiListWapper from '../ReactionEmojiListWapper';
 
 
 const ReactionUserListModal = React.lazy(() => import('../ReactionUserListModal'))
@@ -88,7 +89,7 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                     count: props.reactCount,
                     countBtnOnClick: () => hook.setShowReactionUsersModal(true),
                     countBtnDisabled: props.reactCount === 0,
-                    onClick: () => { },
+                    onClick: hook.createDeleteReaction,
                     label: "Add Reaction",
                     buttonLabelSegment: "reactions"
                   },
@@ -97,7 +98,7 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                     count: props.commentCount,
                     countBtnOnClick: () => hook.setShowComments(true),
                     countBtnDisabled: props.commentCount === 0 || hook.comments.length !== 0,
-                    onClick: () => { },
+                    onClick: () => hook.setShowComments(true),
                     label: "Add Comment",
                     buttonLabelSegment: "comments"
                   },
@@ -112,14 +113,27 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
                   },
                 ].map(btnData => (
                   <div className='' key={btnData.label} >
-                    <IconButton
+                    {btnData.label === "Add Reaction" ? (
+                      <ReactionEmojiListWapper onEmojiClick={hook.createUpdateReaction} >
+                        <IconButton
+                          Icon={btnData.Icon}
+                          onClick={btnData.onClick}
+                          label={btnData.label}
+                          labelClassName='font-semibold'
+                          direction='horizontal'
+                          isActive={!!props.currentUserReaction}
+                        />
+                      </ReactionEmojiListWapper>
+                    ) : (
+                      <IconButton
 
-                      Icon={btnData.Icon}
-                      onClick={btnData.onClick}
-                      label={btnData.label}
-                      labelClassName='font-semibold'
-                      direction='horizontal'
-                    />
+                        Icon={btnData.Icon}
+                        onClick={btnData.onClick}
+                        label={btnData.label}
+                        labelClassName='font-semibold'
+                        direction='horizontal'
+                      />
+                    )}
                     <button
                       className='text-sm font-semibold text-center text-gray-600 hover:underline w-full'
                       disabled={btnData.countBtnDisabled}
@@ -134,7 +148,7 @@ export default function PostCard({ showBottomActions = true, showBottomInf = tru
           )}
 
           <div className='px-4'>
-            <CreateCommentInput avatarSxProps={{marginTop: 0.3}} containerClassname='mb-2' newCommentFunc={hook.addNewComment} />
+            <CreateCommentInput avatarSxProps={{ marginTop: 0.3 }} containerClassname='mb-2' newCommentFunc={hook.addNewComment} />
             {hook.showComments && (
               <CommentList
                 postId={props.id}

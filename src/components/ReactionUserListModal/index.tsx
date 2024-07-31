@@ -15,6 +15,7 @@ interface ReactionUserListModalProps {
     target: ReactionInterface.TargetType
 }
 
+
 export default function ReactionUserListModal(props: ReactionUserListModalProps) {
     const clientHTTP = useClientHTTP()
 
@@ -42,7 +43,7 @@ export default function ReactionUserListModal(props: ReactionUserListModalProps)
             onClose={props.onClose}
         >
             <Tabs<UserInterface.SimpleType>
-                generateChildren={(user) => <UserTile key={user.id} {...user} />}
+                generateChildren={(user) => <UserTile key={user.id} {...user} reactionIcon="💙" />}
                 tabGenerateArray={[
                     {
                         label: "All",
@@ -63,11 +64,18 @@ export default function ReactionUserListModal(props: ReactionUserListModalProps)
     )
 }
 
-function UserTile(props: UserInterface.SimpleType) {
+interface UserTileProps extends UserInterface.SimpleType {
+    reactionIcon: string
+}
+
+function UserTile(props: UserTileProps) {
     return (
         <li className="flex justify-between px-1 py-2">
             <div className="flex items-center hover:cursor-pointer group">
-                <Avatar image={props.profileImageUrl || props.name} />
+                <div className="relative">
+                    <Avatar image={props.profileImageUrl || props.name} />
+                    <span className="absolute bg-white shadow-md rounded-full -bottom-1 right-0 text-2xls">{props.reactionIcon}</span>
+                </div>
                 <Link href={"/in/profile/" + props.username} className="group-hover:underline font-semibold text-gray-600">{props.username}</Link>
             </div>
         </li>

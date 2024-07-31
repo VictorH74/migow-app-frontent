@@ -1,8 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { ReactionTypeEnum } from '@/enums';
 import useClientHTTP from '@/hooks/useClientHTTP';
 import { CommentInterface } from '@/interfaces/Comment';
 import { PostInterface } from '@/interfaces/Post';
+import { ReactionInterface } from '@/interfaces/Reaction';
 import { ResponsePageInterface } from '@/interfaces/ResponsePage';
+import { serverFetch } from '@/lib/actions';
 import React from 'react';
 
 export interface PostCardProps extends PostInterface {
@@ -60,6 +63,35 @@ export default function usePostCard(props: PostCardProps) {
     setComments(prev => [createdComment, ...prev])
   }
 
+  const createDeleteReaction = async () => {
+    if (!!props.currentUserReaction) {
+      await serverFetch<void>(`/p-s/reactions/${props.currentUserReaction.id}`, {
+        method: "DELETE",
+      })
+    }
+
+    createUpdateReaction(ReactionTypeEnum.LIKE);
+
+  }
+
+  const createUpdateReaction = async (reactionType: ReactionTypeEnum) => {
+    if (!!props.currentUserReaction && props.currentUserReaction.type === reactionType) return
+
+    const createdUpdatedReaction = await serverFetch<ReactionInterface.SimpleType>("/p-s/reactions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        id: props.currentUserReaction?.id || null,
+        type: reactionType,
+        target: "post_" + props.id
+      })
+    })
+
+    props.currentUserReaction = createdUpdatedReaction
+  }
+
   return {
     comments,
     setComments,
@@ -71,6 +103,8 @@ export default function usePostCard(props: PostCardProps) {
     showComments,
     setShowComments,
     isLoadingInitialData,
-    addNewComment
+    addNewComment,
+    createUpdateReaction,
+    createDeleteReaction,
   }
 }

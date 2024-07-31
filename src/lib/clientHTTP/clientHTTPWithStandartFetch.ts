@@ -14,11 +14,17 @@ import { ReactionTypeEnum } from "@/enums";
 export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
     async getAllUserByUsernamePrefix(userId: string, usernamePrefix: string = "", pagination?: ResponsePageInterface.PaginationType) {
         return serverFetch<ResponsePageInterface<UserInterface.RetrievedType>>(
-            `/u-s/users/by/${userId}?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
+            `/u-s/users/by/${userId}?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`, {
+            cache: 'no-store',
+            next: { tags: ["people-list"] }
+        })
     }
     async getAllFriendByUsernamePrefix(userId: string, usernamePrefix: string = "", pagination?: ResponsePageInterface.PaginationType) {
         return serverFetch<ResponsePageInterface<UserInterface.RetrievedType>>(
-            `/u-s/users/${userId}/friendships?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
+            `/u-s/users/${userId}/friendships?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`, {
+            cache: 'no-store',
+            next: { tags: ["friend-list"] }
+        })
     }
     async getUserByUsername(username: string): Promise<UserInterface> {
         return serverFetch<UserInterface>(`/u-s/users/username/${username}`)

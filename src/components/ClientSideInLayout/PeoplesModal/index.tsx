@@ -10,10 +10,12 @@ import Tabs from "@/components/Tabs";
 import Avatar from "@/components/Avatar";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
+import { serverFetch } from "@/lib/actions";
 
 interface PeoplesModalProps {
     onClose(): void
     peoplesModalStatus: PeoplesModalStatus
+    currentUser: UserInterface.SimpleType
 }
 
 export interface TabPanelProps {
@@ -27,14 +29,33 @@ export default function PeoplesModal(props: PeoplesModalProps) {
     const clientHTTP = useClientHTTP()
 
     const findPeoples = React.useCallback(async (inputValue: string) => {
-        return clientHTTP.getAllUserByUsernamePrefix("{tokenUserId}", inputValue);
+        return clientHTTP.getAllUserByUsernamePrefix("{tokenUserId}", inputValue, {pageSize: 15});
     }, [])
 
     const findFriends = React.useCallback(async (inputValue: string) => {
-        const simpleUsersPage: ResponsePageInterface<UserInterface.SimpleType> = await clientHTTP.getAllFriendByUsernamePrefix("{tokenUserId}", inputValue)
+        const simpleUsersPage: ResponsePageInterface<UserInterface.SimpleType> = await clientHTTP.getAllFriendByUsernamePrefix("{tokenUserId}", inputValue, {pageSize: 15})
         simpleUsersPage.content = simpleUsersPage.content.map(u => ({ ...u, isFriend: true }));
         return simpleUsersPage as ResponsePageInterface<UserInterface.RetrievedType>
 
+    }, [])
+
+    const switchFriendshipStatus = React.useCallback((user: UserInterface.RetrievedType, queryTag: string, callBack: () => void) => async () => {
+        const requestObj: { userId: string, friendId: string } = {
+            userId: props.currentUser.id,
+            friendId: user.id
+        }
+
+        const createRequestInit: (method: string) => RequestInit = (method) => ({
+            method,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(requestObj),
+        })
+
+        await serverFetch("/u-s/friendships", createRequestInit(user.isFriend ? "DELETE" : "POST"), queryTag)
+
+        callBack();
     }, [])
 
     return (
@@ -44,7 +65,23 @@ export default function PeoplesModal(props: PeoplesModalProps) {
 
             <Tabs<UserInterface.RetrievedType>
                 initialTabIndex={props.peoplesModalStatus === "inPeoples" ? 0 : 1}
-                generateChildren={(user) => <UserTile key={user.id} {...user} />}
+                generateChildren={
+                    (user, currentTab, setUsers) => <UserTile
+                        key={user.id}
+                        {...user}
+                        onFriendshipStatusBtnClick={
+                            switchFriendshipStatus(
+                                user,
+                                currentTab === 0 ? "people-list" : "friend-list",
+                                currentTab === 0
+                                    ? () => setUsers(prev =>
+                                        prev.map(u => ({ ...u, isFriend: u.id === user.id ? !u.isFriend : u.isFriend })))
+                                    : () => setUsers(prev =>
+                                        prev.filter(u => u.id !== user.id))
+                            )
+                        }
+                    />
+                }
                 tabGenerateArray={[
                     {
                         label: "Peoples",
@@ -61,7 +98,9 @@ export default function PeoplesModal(props: PeoplesModalProps) {
 
 }
 
-interface UserTileProps extends UserInterface.RetrievedType { }
+interface UserTileProps extends UserInterface.RetrievedType {
+    onFriendshipStatusBtnClick: () => Promise<void>
+}
 
 function UserTile(props: UserTileProps) {
     return (
@@ -71,7 +110,12 @@ function UserTile(props: UserTileProps) {
                 <Link href={"/in/profile/" + props.username} className="group-hover:underline font-semibold text-gray-600">{props.username}</Link>
             </div>
 
-            <button className={twMerge("py-2 px-4 font-semibold rounded-full", props.isFriend ? "bg-gray-200 text-gray-500" : "bg-gradient text-white")}>{props.isFriend ? "Unfollow" : "Follow"}</button>
+            <button
+                className={twMerge("py-2 px-4 font-semibold rounded-full", props.isFriend ? "bg-gray-200 text-gray-500" : "bg-gradient text-white")}
+                onClick={() => props.onFriendshipStatusBtnClick()}
+            >
+                {props.isFriend ? "Unfollow" : "Follow"}
+            </button>
         </li>
     )
 }
