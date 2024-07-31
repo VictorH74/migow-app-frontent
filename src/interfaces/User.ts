@@ -25,4 +25,13 @@ export namespace UserInterface {
         name: string;
         profileImageUrl?: string
     }
+
+    export type CreateType = {
+        username: string;
+        password: string;
+        name: string;
+        email: string;
+        profileImageUrl: string | null;
+        bgImageUrl: string | null;
+    }
 }

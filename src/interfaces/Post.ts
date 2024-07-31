@@ -10,6 +10,7 @@ export interface PostInterface extends UserGenericProperty {
     commentCount: number
     shareCount: number
     reactionTypeCounts: ReactionInterface.ReactionTypeCountsType
+    currentUserReaction?: ReactionInterface.SimpleType
 }
 
 export namespace PostInterface {

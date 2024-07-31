@@ -8,3 +8,7 @@ export type ISODateRangeFilter  = {
     startDate?: string,
     endDate?: string
 }
+
+export type TokenType = {
+    accessToken: string
+}
