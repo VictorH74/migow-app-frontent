@@ -33,7 +33,7 @@ export default function useCommentTile(props: CommentTileProps) {
     endDate
   }, replies => setReplyComments(prev => [...prev, ...replies]))
 
-  const addNewComment = async (content: string) => {
+  const createReply = async (content: string) => {
     const createdComment = await clientHTTP.createReplyComment({ content, commentId: props.id })
     setReplyComments(prev => [createdComment, ...prev])
   }
@@ -47,6 +47,6 @@ export default function useCommentTile(props: CommentTileProps) {
     setShowReactionUsersModal,
     showReplyInput,
     setShowReplyInput,
-    addNewComment
+    createReply
   }
 }

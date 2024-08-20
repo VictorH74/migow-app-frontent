@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { createPortal } from "react-dom";
-import FixedChatListSidebar from "../FixedChatListSidebar";
+import FixedChatListSidebar from "../ChatListSidebar";
 import ChatBoxList from "../ChatBoxList";
 import ChatBox from "../ChatBox";
 import useChatComponent, { ChatComponentProps } from "./useChatComponent";

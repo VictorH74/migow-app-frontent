@@ -8,6 +8,7 @@ import React from "react";
 import LoadingLazyComponent from "@/components/LoadingLazyComponent";
 import ReactionUserListModal from "@/components/ReactionUserListModal";
 import CreateCommentInput from "../CreateCommentInput";
+import CreateReplyCommentTile from "../CreateReplyCommentTile";
 
 
 const commentAvatarSxProps: SxProps = {
@@ -84,10 +85,10 @@ export default function CommentTile(props: CommentTileProps) {
             <div className="pl-[40px]">
                 {
                     hook.showReplyInput && (
-                        <CreateCommentInput
+                        <CreateReplyCommentTile
                             avatarSxProps={{...replyCommentAvatarSxProps, marginTop: 0.5}}
                             containerClassname="mt-2"
-                            newCommentFunc={hook.addNewComment}
+                            createReplyFunc={hook.createReply}
                         />
                     )
                 }

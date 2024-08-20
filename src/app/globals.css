@@ -19,6 +19,17 @@ body {
   }
 }
 
+.slide-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
 .text-gradient {
   @apply bg-gradient-to-r from-red-200 from-10% via-blue-500 via-50% to-cyan-400 to-100% bg-clip-text text-transparent;
 }

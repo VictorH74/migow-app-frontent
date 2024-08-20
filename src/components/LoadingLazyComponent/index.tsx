@@ -1,10 +1,9 @@
-import Image from "next/image";
-import circleImg from "@/assets/gradient-circle-img.png"
+import Loading from "../Loading";
 
 export default function LoadingLazyComponent() {
     return (
         <div className="fixed bottom-4 left-4 animate-spin size-fit">
-            <Image width={50} height={50} alt="loading circle image" src={circleImg} />
+            <Loading height={50} width={50} />
         </div>
     )
 }

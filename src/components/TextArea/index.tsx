@@ -6,6 +6,7 @@ interface TextAreaProps {
     placeholder?: string;
     onChange(value: string): void;
     className?: string
+    autoFocus?: boolean
 }
 
 export default function TextArea(props: TextAreaProps) {
@@ -22,6 +23,7 @@ export default function TextArea(props: TextAreaProps) {
     return (
         <textarea
             ref={ref}
+            autoFocus={props.autoFocus}
             className={twMerge("border-2 p-2 rounded-md outline-gray-400 autofill:none resize-none overflow-hidden", props.className)}
             rows={1}
             placeholder={props.placeholder}

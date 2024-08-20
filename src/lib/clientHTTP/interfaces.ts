@@ -1,4 +1,4 @@
-import { ReactionTypeEnum } from "@/enums";
+import { FriendshipStatusEnum, ReactionTypeEnum } from "@/enums";
 import { ActivityInterface } from "@/interfaces/Activity";
 import { CommentInterface } from "@/interfaces/Comment";
 import { NotificationInterface } from "@/interfaces/Notification";
@@ -21,7 +21,7 @@ export interface ClientHTTPInterface {
     // getProfileSettings(ownerId: string): Promise<AccountPreferencesSettings & PrivacySettings & NotificationsSettings> // pending
 
     checkIfUserBlockedUserId(targetUserId: string, currentUserId: string): Promise<{ status: boolean }> // pending
-    checkIfUserHasFriendshipWith(targetUserId: string, currentUserId: string): Promise<{ isFriend: boolean }>
+    checkIfUserHasFriendshipWith(targetUserId: string, currentUserId: string): Promise<{ friendshipStatus: FriendshipStatusEnum; }>
 
     getAllFriendPost(filter: GetAllPostFilterType, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<PostInterface>>
 
@@ -34,6 +34,6 @@ export interface ClientHTTPInterface {
     createComment(comment: CommentInterface.CreateType): Promise<CommentInterface>
     createReplyComment(reply: CommentInterface.CreateReplyType): Promise<CommentInterface.ReplyType>
 
-    getAllReactionUser(target: ReactionInterface.TargetType, usernamePrefix?: string, reactionTypeCode?: ReactionTypeEnum, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<UserInterface.SimpleType>>
+    getAllReactionUser(target: ReactionInterface.TargetType, usernamePrefix?: string, reactionTypeCode?: ReactionTypeEnum, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<UserInterface.ReactionUserType>>
     // getAllTargetReactionUser(target: string): Promise<ResponsePageInterface<UserInterface.SimpleType>>
 }

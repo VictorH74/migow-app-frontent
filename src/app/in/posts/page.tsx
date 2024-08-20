@@ -12,7 +12,7 @@ export default function PostsPage() {
     <div className='mt-2'>
       <main>
         <ul className='flex flex-col gap-2 items-center'>
-            {posts.map(post => (<PostCard key={post.id} {...post} />))}
+            {posts.map(post => (<PostCard key={post.id} post={post} />))}
         </ul>
       </main>
     </div>

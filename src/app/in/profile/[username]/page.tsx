@@ -1,12 +1,10 @@
 import React from 'react';
-import UserActivities from './components/UserActivities';
 import SendIcon from '@mui/icons-material/Send';
-import { VisibilityEnum } from '@/enums';
+import { FriendshipStatusEnum, VisibilityEnum } from '@/enums';
 import { cookies } from "next/headers"
 import Avatar from '@/components/Avatar';
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { serverFetch } from '@/lib/actions';
-import { ProfileSettingsInterface } from '@/interfaces/ProfileSettings';
 import { UserInterface } from '@/interfaces/User';
 import EditProfileBtn from './components/EditProfileBtn';
 import { PrivacySettingsInterface } from '@/interfaces/PrivacySettings';
@@ -20,7 +18,7 @@ const getCommonFriendship = async (currentUserId: string, profileOwnerUserId: st
     (`/u-s/friendships/common?userId=${currentUserId}&targetId=${profileOwnerUserId}`)
 
 const checkIfHasFriendshipBetweenBoth = async (currentUserId: string, profileOwnerUserId: string) =>
-  serverFetch<{ isFriend: boolean; }>(`/u-s/friendships/${currentUserId}/friendship-with/${profileOwnerUserId}`)
+  serverFetch<{ friendshipStatus: FriendshipStatusEnum; }>(`/u-s/friendships/${currentUserId}/friendship-with/${profileOwnerUserId}`)
 
 export default async function ProfilePage({ params }: { params: { username: string } }) {
   const ownerToken = cookies().get("accessToken");
@@ -44,7 +42,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
 
   const ownerPrivacySettings = await serverFetch<PrivacySettingsInterface>(`/u-s/settings/${ownerUser.id}/privacy`)
 
-  const hasFriendshipBetweenBoth = !isOwner && ((await checkIfHasFriendshipBetweenBoth(currentUser.id, ownerUser.id)).isFriend)
+  const hasFriendshipBetweenBoth = !isOwner && ((await checkIfHasFriendshipBetweenBoth(currentUser.id, ownerUser.id)).friendshipStatus == FriendshipStatusEnum.IS_FRIEND)
 
   const commonFriendship = (await getCommonFriendship(currentUser.id, ownerUser.id));
 

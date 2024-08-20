@@ -12,7 +12,7 @@ interface AvatarProp {
 export default function Avatar(props: AvatarProp) {
 
     const getImageProp = () => {
-        if (!props.image) return {}
+        if (!props.image) return { sx: props.avatarSxProps }
 
         try {
             new URL(props.image)

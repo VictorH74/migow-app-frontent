@@ -1,11 +1,10 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
-import Image from "next/image";
-import circleImg from "@/assets/gradient-circle-img.png"
 import CloseIcon from '@mui/icons-material/Close';
 import Avatar from "@/components/Avatar";
-import { closedChatBoxHeight, closedChatBoxWidth, openChatBoxHeight, openChatBoxWidth } from "@/components/ClientSideInLayout/ChatComponent/useChatComponent";
+import { closedChatBoxHeight, closedChatBoxWidth, openChatBoxHeight, openChatBoxWidth } from "@/components/ClientSideInLayout/components/ChatComponent/useChatComponent";
 import { ChatInterface } from "@/interfaces/Chat";
+import Loading from "@/components/Loading";
 
 interface ChatBoxProps {
     chatBox: ChatInterface.ChatBoxType
@@ -64,7 +63,7 @@ export default function ChatBox({ chatBox, ...props }: ChatBoxProps) {
             {
                 isLoading ? (
                     <div className="animate-spin size-fit">
-                        <Image width={50} height={50} alt="loading circle image" src={circleImg} />
+                        <Loading height={50} width={50} />
                     </div>
                 )
                     : error ? (<>

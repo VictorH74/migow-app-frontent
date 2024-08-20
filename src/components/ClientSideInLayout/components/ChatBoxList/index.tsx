@@ -1,5 +1,5 @@
 import React from "react";
-import { chatBoxListContainerGap, fixedChatListSidebarWidth, openChatBoxHeight } from "@/components/ClientSideInLayout/ChatComponent/useChatComponent";
+import { chatBoxListContainerGap, fixedChatListSidebarWidth, openChatBoxHeight } from "@/components/ClientSideInLayout/components/ChatComponent/useChatComponent";
 import { OnlineFollowerBtnSize } from "../OnlineUsersSidebar/useOnlineUsersSidebar";
 
 interface ChatBoxListProps extends React.PropsWithChildren {

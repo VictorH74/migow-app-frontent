@@ -6,6 +6,19 @@ import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation";
 
+const registerToken = (token: TokenType) => {
+    console.log(jwtDecode(token.accessToken))
+
+    cookies().set('accessToken', token.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: jwtDecode(token.accessToken).exp
+    })
+}
+
+export const getCurrentUser = () => serverFetch<UserInterface.SimpleType>("/u-s/users/{tokenUserId}")
+
 export async function register(_currentState: unknown, formData: FormData) {
     // TODO: validate data
     const obj: UserInterface.CreateType = {
@@ -30,14 +43,7 @@ export async function register(_currentState: unknown, formData: FormData) {
 
         if (res.message) return res as { message: string, status: number }
 
-        const token = res as TokenType
-
-        cookies().set('accessToken', token.accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            maxAge: 30 * 24 * 60 * 60, // 30 dias
-        })
+        registerToken(res as TokenType)
 
         ok = true
     } catch (e) {
@@ -67,14 +73,7 @@ export async function authenticate(_currentState: unknown, formData: FormData) {
 
         if (res.message) return res as { message: string, status: number }
 
-        const token = res as TokenType
-
-        cookies().set('accessToken', token.accessToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            path: '/',
-            maxAge: 30 * 24 * 60 * 60, // 30 dias
-        })
+        registerToken(res as TokenType)
 
         ok = true
     } catch (e) {

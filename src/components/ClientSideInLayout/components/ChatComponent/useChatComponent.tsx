@@ -41,17 +41,18 @@ export default function useChatComponent(props: ChatComponentProps) {
         setChats(chatsMock)
     }
 
-    const getChatBoxesWidthCalc = (predicate?: (chatBox: ChatInterface.ChatBoxType) => boolean | undefined) => {
+    const getOccupiedWidth = (predicate?: (chatBox: ChatInterface.ChatBoxType) => boolean | undefined) => {
         return chatBoxes.reduce((currentTotal, chatBox) => {
             return currentTotal + ((predicate ? predicate(chatBox) : chatBox.isOpen) ? openChatBoxWidth : closedChatBoxWidth)
         }, 0)
     }
 
-    const getChatBoxesWidthCalcWithSpacing = (chatBoxesWidthCalc: number) => chatBoxesWidthCalc + ((chatBoxes.length + 1) * chatBoxListContainerGap)
+    const getOccupiedWidthWithSpacing = (occupiedWidth: number) => occupiedWidth + (chatBoxes.length + 1) * chatBoxListContainerGap
 
-    const hasSpacingToNewChatBox = (chatBoxesWidthCalc: number) => {
-        const futureChatBoxesWidthCalc = getChatBoxesWidthCalcWithSpacing(chatBoxesWidthCalc) + openChatBoxWidth
-        return futureChatBoxesWidthCalc <= chatBoxListContainerRef.current!.offsetWidth;
+    const hasSpacingToNewChatBox = (occupiedWidth: number) => {
+
+        const futureOccupiedWidth = getOccupiedWidthWithSpacing(occupiedWidth) + openChatBoxWidth
+        return futureOccupiedWidth <= chatBoxListContainerRef.current!.offsetWidth;
     }
 
     const includeChatBox = React.useCallback(async (chatBox: ChatInterface.ChatBoxType) => {
@@ -61,28 +62,29 @@ export default function useChatComponent(props: ChatComponentProps) {
 
         const newChatBox: ChatInterface.ChatBoxType = { ...chatBox, isOpen: true }
 
-        const chatBoxesWidthCalc = getChatBoxesWidthCalc()
-        // const chatBoxesWidthCalc = getChatBoxesWidthCalc(chatBox => chatBox.isOpen)
-        if (hasSpacingToNewChatBox(chatBoxesWidthCalc)) {
+        const occupiedWidth = getOccupiedWidth()
+
+        if (hasSpacingToNewChatBox(occupiedWidth)) {
             return setChatBoxes(prev => [...prev, newChatBox])
         }
 
         let newChatBoxIncluded = false
         // close chat boxes until a new chat box is possible
-        const openChatBoxesObj: Record<string, ChatInterface.ChatBoxType> = {}
+        const openChatBoxesMap: Record<string, ChatInterface.ChatBoxType> = {}
         for (let i = 0; i < chatBoxes.length; i++) {
-            if (chatBoxes[i].isOpen) openChatBoxesObj[chatBoxes[i].chatId] = chatBoxes[i]
+            if (chatBoxes[i].isOpen) openChatBoxesMap[chatBoxes[i].chatId] = chatBoxes[i]
 
-            const chatBoxesWidthCalc = getChatBoxesWidthCalc(chatBox => chatBox.isOpen && !Object.hasOwn(openChatBoxesObj, chatBox.chatId))
-            if (hasSpacingToNewChatBox(chatBoxesWidthCalc)) {
+            const occupiedWidth = getOccupiedWidth(chatBox => chatBox.isOpen && !Object.hasOwn(openChatBoxesMap, chatBox.chatId))
+            if (hasSpacingToNewChatBox(occupiedWidth)) {
                 setChatBoxes(prev => [
                     ...prev.map(
-                        chatBox => Object.hasOwn(openChatBoxesObj, chatBox.chatId)
-                            ? { ...openChatBoxesObj[chatBox.chatId], isOpen: false }
+                        chatBox => Object.hasOwn(openChatBoxesMap, chatBox.chatId)
+                            ? { ...chatBox, isOpen: false }
                             : chatBox
                     ),
                     newChatBox
                 ])
+
                 newChatBoxIncluded = true
                 break;
             }
@@ -95,16 +97,20 @@ export default function useChatComponent(props: ChatComponentProps) {
         let widthToDecrease = 0
         for (let i = chatBoxes.length - 1; i >= 0; i--) {
             const chatBox = chatBoxes[i]
-            widthToDecrease = chatBox.isOpen ? openChatBoxWidth : closedChatBoxWidth
-            const futureChatBoxesWidthCalc = getChatBoxesWidthCalc() - widthToDecrease
-            if (hasSpacingToNewChatBox(futureChatBoxesWidthCalc)) {
+
+            widthToDecrease += (chatBox.isOpen ? openChatBoxWidth : closedChatBoxWidth + chatBoxListContainerGap)
+            const futureOccupiedWidth = getOccupiedWidth() - widthToDecrease
+            console.log("widthToDecrease", widthToDecrease)
+            console.log("futureOccupiedWidth", futureOccupiedWidth)
+            console.log("asSpacingToNewChatBox", hasSpacingToNewChatBox(futureOccupiedWidth))
+            if (hasSpacingToNewChatBox(futureOccupiedWidth)) {
                 setChatBoxes(prev => [
-                    ...prev.filter(cb => !onRemoveChatsIds.includes(cb.chatId)),
+                    ...prev.filter(cb => !onRemoveChatsIds.includes(cb.chatId) || !(chatBox.chatId == cb.chatId)),
                     newChatBox
                 ])
                 break;
             }
-            onRemoveChatsIds.push(chatBox.chatId)
+            console.log(onRemoveChatsIds.push(chatBox.chatId))
         }
 
     }, [chatBoxes])
@@ -114,8 +120,8 @@ export default function useChatComponent(props: ChatComponentProps) {
     }, [chatBoxes])
 
     const openChatBox = React.useCallback((chatId: string) => {
-        const chatBoxesWidthCalc = getChatBoxesWidthCalc(chatBox => chatBox.isOpen || chatBox.chatId === chatId)
-        if (getChatBoxesWidthCalcWithSpacing(chatBoxesWidthCalc) > chatBoxListContainerRef.current!.offsetWidth) {
+        const occupiedWidth = getOccupiedWidth(chatBox => chatBox.isOpen || chatBox.chatId === chatId)
+        if (getOccupiedWidthWithSpacing(occupiedWidth) > chatBoxListContainerRef.current!.offsetWidth) {
             // loop until find a closed chat box to remove and open the target chat
             for (let i = chatBoxes.length - 1; i >= 0; i--) {
                 const chatBox = chatBoxes[i]

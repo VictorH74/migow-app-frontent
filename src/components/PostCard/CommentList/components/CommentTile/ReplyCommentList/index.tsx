@@ -1,9 +1,8 @@
 import { CommentInterface } from "@/interfaces/Comment"
 import React from "react"
-import circleImg from "@/assets/gradient-circle-img.png"
-import Image from "next/image";
 import { useQuery } from "@tanstack/react-query"
 import ReplyCommentTile from "./ReplyCommentTile"
+import Loading from "@/components/Loading";
 
 
 interface ReplyCommentList {
@@ -40,6 +39,6 @@ export default function ReplyCommentList(props: ReplyCommentList) {
 
 const ReplyCommentListLoading = () => (
     <div className='p-5 grid place-items-center'>
-        <Image width={35} height={35} alt="loading circle image" src={circleImg} />
+        <Loading height={35} width={35} />
     </div>
 )

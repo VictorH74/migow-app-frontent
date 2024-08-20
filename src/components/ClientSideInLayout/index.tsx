@@ -2,14 +2,14 @@
 import React from "react";
 import useClientSideInLayout from "./useClientSideInLayout";
 import LoadingLazyComponent from "../LoadingLazyComponent";
-import OnlineUsersSidebar from "./OnlineUsersSidebar";
-import Header from "./Header";
-import ChatComponent from "./ChatComponent";
+import OnlineUsersSidebar from "./components/OnlineUsersSidebar";
+import Header from "./components/Header";
+import ChatComponent from "./components/ChatComponent";
 import { UserInterface } from "@/interfaces/User";
 import PostArrayProvider from "@/contexts/PostArrayProvider";
 
-const PeoplesModal = React.lazy(() => import('./PeoplesModal'));
-const AddNewPostModal = React.lazy(() => import('./AddNewPostModal'));
+const PeoplesModal = React.lazy(() => import('./components/PeoplesModal'));
+const NewPostFormModal = React.lazy(() => import('./components/NewPostFormModal'));
 // const FixedChatListSidebar = React.lazy(() => import('./FixedChatListSidebar'));
 
 interface ClientSideInLayoutProps extends React.PropsWithChildren {
@@ -29,7 +29,7 @@ export default function ClientSideInLayout(props: ClientSideInLayoutProps) {
             />
 
             <React.Suspense fallback={<LoadingLazyComponent />}>
-                {hook.showAddPostModal && (<AddNewPostModal onClose={() => hook.setShowAddPostModal(false)} />)}
+                {hook.showAddPostModal && (<NewPostFormModal onClose={() => hook.setShowAddPostModal(false)} />)}
             </React.Suspense>
 
             <React.Suspense fallback={<LoadingLazyComponent />}>

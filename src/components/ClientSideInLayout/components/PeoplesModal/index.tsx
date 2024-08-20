@@ -11,6 +11,8 @@ import Avatar from "@/components/Avatar";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { serverFetch } from "@/lib/actions";
+import { useRouter } from "next/navigation";
+import { FriendshipStatusEnum } from "@/enums";
 
 interface PeoplesModalProps {
     onClose(): void
@@ -24,25 +26,33 @@ export interface TabPanelProps {
     value: number;
 }
 
+const isFriend = (status: FriendshipStatusEnum) => status === FriendshipStatusEnum.IS_FRIEND
+
 // TODO: implements infinity scroll
 export default function PeoplesModal(props: PeoplesModalProps) {
     const clientHTTP = useClientHTTP()
 
     const findPeoples = React.useCallback(async (inputValue: string) => {
-        return clientHTTP.getAllUserByUsernamePrefix("{tokenUserId}", inputValue, {pageSize: 15});
+        const data = await clientHTTP.getAllUserByUsernamePrefix("{tokenUserId}", inputValue, { pageSize: 15 });
+        console.log(data)
+        return data;
     }, [])
 
     const findFriends = React.useCallback(async (inputValue: string) => {
-        const simpleUsersPage: ResponsePageInterface<UserInterface.SimpleType> = await clientHTTP.getAllFriendByUsernamePrefix("{tokenUserId}", inputValue, {pageSize: 15})
-        simpleUsersPage.content = simpleUsersPage.content.map(u => ({ ...u, isFriend: true }));
-        return simpleUsersPage as ResponsePageInterface<UserInterface.RetrievedType>
+        const simpleUsersPage: ResponsePageInterface<UserInterface.SimpleType> = await clientHTTP.getAllFriendByUsernamePrefix("{tokenUserId}", inputValue, { pageSize: 15 })
+        simpleUsersPage.content = simpleUsersPage.content.map(u => ({ ...u, friendshipStatus: FriendshipStatusEnum.IS_FRIEND }));
+        const data = await simpleUsersPage as ResponsePageInterface<UserInterface.RetrievedType>
+        console.log(data)
+        return data;
 
     }, [])
 
-    const switchFriendshipStatus = React.useCallback((user: UserInterface.RetrievedType, queryTag: string, callBack: () => void) => async () => {
-        const requestObj: { userId: string, friendId: string } = {
-            userId: props.currentUser.id,
-            friendId: user.id
+    const switchFriendshipStatus = React.useCallback((user: UserInterface.RetrievedType, queryTag: string, callBack: (finalStatus: FriendshipStatusEnum) => void) => async () => {
+        const isDeleteMethod = isFriend(user.friendshipStatus)
+
+        const requestObj: Record<string, string> = {
+            ownerId: props.currentUser.id,
+            targetId: user.id
         }
 
         const createRequestInit: (method: string) => RequestInit = (method) => ({
@@ -53,9 +63,18 @@ export default function PeoplesModal(props: PeoplesModalProps) {
             body: JSON.stringify(requestObj),
         })
 
-        await serverFetch("/u-s/friendships", createRequestInit(user.isFriend ? "DELETE" : "POST"), queryTag)
 
-        callBack();
+        try {
+            console.log(`/u-s/friendships${isDeleteMethod ? "" : "/request"}`, createRequestInit(isDeleteMethod ? "DELETE" : "POST"), queryTag)
+            await serverFetch(`/u-s/friendships${isDeleteMethod ? "" : "/request"}`, createRequestInit(isDeleteMethod ? "DELETE" : "POST"), queryTag)
+
+            callBack(isDeleteMethod ? FriendshipStatusEnum.IS_NOT_FRIEND : FriendshipStatusEnum.PENDING);
+        } catch (e) {
+            alert("error")
+            console.error(e)
+        }
+
+
     }, [])
 
     return (
@@ -74,8 +93,8 @@ export default function PeoplesModal(props: PeoplesModalProps) {
                                 user,
                                 currentTab === 0 ? "people-list" : "friend-list",
                                 currentTab === 0
-                                    ? () => setUsers(prev =>
-                                        prev.map(u => ({ ...u, isFriend: u.id === user.id ? !u.isFriend : u.isFriend })))
+                                    ? (finalStatus) => setUsers(prev =>
+                                        prev.map(u => ({ ...u, friendshipStatus: u.id === user.id ? finalStatus : u.friendshipStatus })))
                                     : () => setUsers(prev =>
                                         prev.filter(u => u.id !== user.id))
                             )
@@ -98,11 +117,18 @@ export default function PeoplesModal(props: PeoplesModalProps) {
 
 }
 
+const buttonLabelByStatus: Record<FriendshipStatusEnum, string> = {
+    "1": "Unfollow",
+    "2": "Follow",
+    "3": "Pending",
+}
+
 interface UserTileProps extends UserInterface.RetrievedType {
     onFriendshipStatusBtnClick: () => Promise<void>
 }
 
 function UserTile(props: UserTileProps) {
+
     return (
         <li className="flex justify-between px-1 py-2">
             <div className="flex items-center hover:cursor-pointer group">
@@ -111,10 +137,17 @@ function UserTile(props: UserTileProps) {
             </div>
 
             <button
-                className={twMerge("py-2 px-4 font-semibold rounded-full", props.isFriend ? "bg-gray-200 text-gray-500" : "bg-gradient text-white")}
+                className={twMerge(
+                    "py-2 px-4 font-semibold rounded-full",
+                    props.friendshipStatus == FriendshipStatusEnum.IS_FRIEND
+                        ? "bg-gray-400 text-gray-100"
+                        : props.friendshipStatus == FriendshipStatusEnum.PENDING
+                            ? "bg-gray-200 text-gray-500"
+                            : "bg-gradient text-white")}
                 onClick={() => props.onFriendshipStatusBtnClick()}
+                disabled={props.friendshipStatus == FriendshipStatusEnum.PENDING}
             >
-                {props.isFriend ? "Unfollow" : "Follow"}
+                {buttonLabelByStatus[props.friendshipStatus]}
             </button>
         </li>
     )

@@ -3,7 +3,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from '@mui/icons-material/Close';
-import { fixedChatListSidebarWidth } from "@/components/ClientSideInLayout/ChatComponent/useChatComponent";
+import { fixedChatListSidebarWidth } from "@/components/ClientSideInLayout/components/ChatComponent/useChatComponent";
 import ChatListItem from "./ChatListItem";
 import { ChatInterface } from "@/interfaces/Chat";
 
@@ -17,7 +17,7 @@ interface FixedChatListSidebarProps {
 
 // TODO: fetch user messages from firebase
 
-export default function FixedChatListSidebar(props: FixedChatListSidebarProps) {
+export default function ChatListSidebar(props: FixedChatListSidebarProps) {
     const sidebarRef = React.useRef<HTMLDivElement | null>(null)
 
     React.useEffect(() => {

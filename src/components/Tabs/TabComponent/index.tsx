@@ -1,6 +1,5 @@
-import Image from "next/image"
 import useTabComponent, { TabComponentProps } from "./useTabComponent"
-import circleImg from "@/assets/gradient-circle-img.png"
+import Loading from "@/components/Loading"
 
 
 export default function TabComponent<UserT>(props: TabComponentProps<UserT>) {
@@ -12,7 +11,7 @@ export default function TabComponent<UserT>(props: TabComponentProps<UserT>) {
             hidden={props.currentTabIndex !== props.tabIndex}
             id={`simple-tabpanel-${props.tabIndex}`}
             aria-labelledby={`simple-tab-${props.tabIndex}`}
-            className="w-full grow"
+            className="w-full overflow-y-auto"
         >
             <input
                 className="p-2 border border-gray-500 outline-none rounded-full w-full mb-3"
@@ -24,13 +23,13 @@ export default function TabComponent<UserT>(props: TabComponentProps<UserT>) {
             />
             {
                 tabComponent.loadingUsers
-                    ? (<Loading />)
+                    ? (<LoadingComp />)
                     : tabComponent.users.length === 0 ?
                         (<NoUsersFound />)
                         :
                         (
                             // TODO: move li element to this component
-                            <ul className="flex flex-col gap-2 w-full overflow-y-auto h-full border-2">
+                            <ul className="w-full space-y-4">
                                 {
                                     tabComponent.users.map(
                                         user => props.children(user, tabComponent.setUsers)
@@ -43,14 +42,9 @@ export default function TabComponent<UserT>(props: TabComponentProps<UserT>) {
     )
 }
 
-const Loading = () => (
+const LoadingComp = () => (
     <div className="size-full grid place-items-center">
-        <Image
-            className=" animate-spin"
-            width={50} height={50}
-            alt="loading circle image"
-            src={circleImg}
-        />
+        <Loading height={50} width={50} />
     </div>
 )
 

@@ -1,4 +1,5 @@
 import { ISODateType } from "@/types";
+import { FriendshipStatusEnum, ReactionTypeEnum } from "@/enums";
 
 export interface UserInterface {
     id: string,
@@ -17,7 +18,7 @@ export namespace UserInterface {
 
     export type ProfileType = Pick<UserInterface, "id" | "username" | "name" | "profileImageUrl" | "bgImageUrl" | "createdAt">
 
-    export type RetrievedType = SimpleType & { isFriend: boolean }
+    export type RetrievedType = SimpleType & { friendshipStatus: FriendshipStatusEnum }
 
     export type OnlineUserType = {
         id: string,
@@ -33,5 +34,9 @@ export namespace UserInterface {
         email: string;
         profileImageUrl: string | null;
         bgImageUrl: string | null;
+    }
+
+    export type ReactionUserType = SimpleType & {
+        reactionType: ReactionTypeEnum
     }
 }

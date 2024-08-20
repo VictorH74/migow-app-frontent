@@ -27,3 +27,9 @@ export enum UserEventEnum {
 export enum ReactionTypeEnum {
     LIKE = 1, FUNNY = 2, LOVE = 3, SAD = 4, CUTE = 5, SCARY = 6
 }
+
+export enum FriendshipStatusEnum {
+    IS_FRIEND = 1,
+    IS_NOT_FRIEND = 2,
+    PENDING = 3,
+}

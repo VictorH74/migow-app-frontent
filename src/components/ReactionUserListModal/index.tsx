@@ -8,6 +8,7 @@ import { UserInterface } from "@/interfaces/User";
 import Tabs from "../Tabs";
 import Avatar from "../Avatar";
 import Link from "next/link";
+import { EMOJI_BY_REACTION_TYPE, REACTION_ARRAY } from "@/util/constants";
 
 interface ReactionUserListModalProps {
     onClose(): void
@@ -29,33 +30,33 @@ export default function ReactionUserListModal(props: ReactionUserListModalProps)
         return array
     }, [props.reactionTypeCounts])
 
-    const reaction: Record<keyof ReactionInterface.ReactionTypeCountsType, { name: string, type: ReactionTypeEnum }> = React.useMemo(() => ({
-        cuteReaction: { name: "Cute", type: ReactionTypeEnum.CUTE },
-        funnyReaction: { name: "Funny", type: ReactionTypeEnum.FUNNY },
-        likeReaction: { name: "Like", type: ReactionTypeEnum.LIKE },
-        loveReaction: { name: "Love", type: ReactionTypeEnum.LOVE },
-        sadReaction: { name: "Sad", type: ReactionTypeEnum.SAD },
-        scaryReaction: { name: "Scary", type: ReactionTypeEnum.SCARY },
-    }), [])
+    const reactionByPropName: Record<keyof ReactionInterface.ReactionTypeCountsType, { name: string, type: ReactionTypeEnum }> = React.useMemo(() => {
+        const ReactionByName: Record<any, any> = {}
+        REACTION_ARRAY.forEach(r => {
+            ReactionByName[r.name.toLowerCase() + "Reaction"] = r
+        })
+        console.log(ReactionByName)
+        return ReactionByName
+    }, [])
 
     return (
         <ModalContainer
             onClose={props.onClose}
         >
-            <Tabs<UserInterface.SimpleType>
-                generateChildren={(user) => <UserTile key={user.id} {...user} reactionIcon="💙" />}
+            <Tabs<UserInterface.ReactionUserType>
+                generateChildren={(user) => <UserTile key={user.id} {...user} reactionIcon={EMOJI_BY_REACTION_TYPE[user.reactionType]} />}
                 tabGenerateArray={[
                     {
                         label: "All",
                         queryFunc: (usernamePrefix) => clientHTTP.getAllReactionUser(props.target, usernamePrefix)
                     },
                     ...(tabArray.length > 1 ? tabArray.map(obj => ({
-                        label: reaction[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].name,
+                        label: reactionByPropName[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].name,
                         queryFunc: (usernamePrefix: string) => clientHTTP
                             .getAllReactionUser(
                                 props.target,
                                 usernamePrefix,
-                                reaction[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].type,
+                                reactionByPropName[obj.prop as keyof ReactionInterface.ReactionTypeCountsType].type,
                             )
                     })) : []),
                 ]}
@@ -64,7 +65,7 @@ export default function ReactionUserListModal(props: ReactionUserListModalProps)
     )
 }
 
-interface UserTileProps extends UserInterface.SimpleType {
+interface UserTileProps extends UserInterface.ReactionUserType {
     reactionIcon: string
 }
 

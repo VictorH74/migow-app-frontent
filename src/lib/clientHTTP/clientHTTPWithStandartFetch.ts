@@ -9,7 +9,7 @@ import { ActivityInterface } from "@/interfaces/Activity";
 import { ResponsePageInterface } from "@/interfaces/ResponsePage";
 import { ReactionInterface } from "@/interfaces/Reaction";
 import { parsePaginationToParams } from "@/util/functions";
-import { ReactionTypeEnum } from "@/enums";
+import { FriendshipStatusEnum, ReactionTypeEnum } from "@/enums";
 
 export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
     async getAllUserByUsernamePrefix(userId: string, usernamePrefix: string = "", pagination?: ResponsePageInterface.PaginationType) {
@@ -47,8 +47,8 @@ export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
     checkIfUserBlockedUserId(targetUserId: string, currentUserId: string): Promise<{ status: boolean; }> {
         throw new Error("Method not implemented.");
     }
-    async checkIfUserHasFriendshipWith(targetUserId: string, currentUserId: string): Promise<{ isFriend: boolean; }> {
-        return serverFetch<{ isFriend: boolean; }>(
+    async checkIfUserHasFriendshipWith(targetUserId: string, currentUserId: string): Promise<{ friendshipStatus: FriendshipStatusEnum; }> {
+        return serverFetch<{ friendshipStatus: FriendshipStatusEnum; }>(
             `/u-s/friendships/${targetUserId}/friendship-with/${currentUserId}`)
     }
 
@@ -67,8 +67,8 @@ export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
 
     createPost(post: PostInterface.CreateType): Promise<PostInterface> {
 
-        const { mediaURLs } = post
         // TODO: upload media list to firebase
+        // const { mediaURLs } = post
 
         return serverFetch<PostInterface>(`/p-s/posts`, {
             method: "POST",
@@ -99,12 +99,12 @@ export class clientHTTPWithStandartFetch implements ClientHTTPInterface {
         return serverFetch<CommentInterface>(`/p-s/comments/${commentId}`);
     }
 
-    getAllReactionUser(target: ReactionInterface.TargetType, usernamePrefix?: string, reactionTypeCode?: ReactionTypeEnum, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<UserInterface.SimpleType>> {
+    getAllReactionUser(target: ReactionInterface.TargetType, usernamePrefix?: string, reactionTypeCode?: ReactionTypeEnum, pagination?: ResponsePageInterface.PaginationType): Promise<ResponsePageInterface<UserInterface.ReactionUserType>> {
         let url = `p-s/reactions/with-target/${target}`
 
         if (reactionTypeCode) url += `/by-reaction-type/${reactionTypeCode}`
 
-        return serverFetch<ResponsePageInterface<UserInterface.SimpleType>>(
+        return serverFetch<ResponsePageInterface<UserInterface.ReactionUserType>>(
             `/${url}?usernamePrefix=${usernamePrefix}&${parsePaginationToParams(pagination)}`)
     }
 }

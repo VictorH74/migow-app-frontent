@@ -1,5 +1,5 @@
 import { ReactionTypeEnum } from "@/enums";
-import { EMOJIS } from "@/util/constants";
+import { REACTION_ARRAY, REACTION_TYPE_BY_EMOJI } from "@/util/constants";
 import React from "react";
 
 interface ReactionEmojiListWapperProps extends React.PropsWithChildren {
@@ -32,10 +32,10 @@ export default function ReactionEmojiListWapper(props: ReactionEmojiListWapperPr
             {
                 showEmojis && (
                     <ul className="absolute bottom-full w-auto flex flex-row gap-1 bg-white p-3 rounded-xl shadow-lg">
-                        {EMOJIS.map(e => (
-                            <li key={e.reactionType}>
-                                <button onClick={() => props.onEmojiClick(e.reactionType)} className="hover:scale-125 duration-200" >
-                                    {/* e.emojiIcon */}<p className="text-3xl">{e.emojiIcon}</p>
+                        {REACTION_ARRAY.map(reaction => (
+                            <li key={reaction.type}>
+                                <button onClick={() => props.onEmojiClick(reaction.type)} className="hover:scale-125 duration-200" >
+                                    <p className="text-3xl">{reaction.icon}</p>
                                 </button>
                             </li>
                         ))}

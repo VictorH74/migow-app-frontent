@@ -1,24 +1,23 @@
-import { CommentInterface } from "@/interfaces/Comment";
 import CommentTile from "./components/CommentTile";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import circleImg from "@/assets/gradient-circle-img.png"
-import Image from "next/image";
+import usePost from "@/hooks/usePost";
+import CreateCommentTile from "./components/CreateCommentTile";
+import Loading from "@/components/Loading";
 
 
 interface CommentListProps {
     postId: string
-    comments: CommentInterface[]
     commentCount: number
-    highlightReplyComment?: CommentInterface.ReplyType
-    loadComments(endDate: string): () => Promise<void>
 }
 
 export default React.memo(function CommentList(props: CommentListProps) {
+    const { comments, loadMoreComments } = usePost()
+
     const initialDataDate = React.useMemo(() => new Date().toISOString(), [])
     const { isLoading } = useQuery({
         queryKey: [props.postId + '-comments'],
-        queryFn: props.loadComments(initialDataDate),
+        queryFn: loadMoreComments(initialDataDate),
         retry: false,
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
@@ -30,13 +29,20 @@ export default React.memo(function CommentList(props: CommentListProps) {
 
     return (
         <>
+            <CreateCommentTile
+                avatarSxProps={{ marginTop: 0.3 }}
+                containerClassname='mb-2'
+            />
             <ul className="flex flex-col gap-3">
-                {props.comments.map(c => (
-                    <CommentTile key={c.id} {...c} highlightReplyComment={c.id === props.highlightReplyComment?.comment ? props.highlightReplyComment : undefined} />
+                {comments.map(c => (
+                    <CommentTile
+                        key={c.id} {...c}
+                    // highlightReplyComment={c.id === props.highlightReplyComment?.comment ? props.highlightReplyComment : undefined} 
+                    />
                 ))}
             </ul>
-            {props.comments.length > 0 && props.comments.length < props.commentCount && (
-                <button className="font-semibold hover:underline m-auto w-full" onClick={props.loadComments(initialDataDate)}>Load more 10 comments</button>
+            {comments.length > 0 && comments.length < props.commentCount && (
+                <button className="font-semibold hover:underline m-auto w-full" onClick={loadMoreComments(initialDataDate)}>Load more 10 comments</button>
             )}
         </>
 
@@ -45,6 +51,6 @@ export default React.memo(function CommentList(props: CommentListProps) {
 
 const CommentListLoading = () => (
     <div className='p-5 grid place-items-center'>
-      <Image width={35} height={35} alt="loading circle image" src={circleImg} />
+        <Loading height={35} width={35} />
     </div>
-  )
+)

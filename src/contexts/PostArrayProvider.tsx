@@ -38,6 +38,7 @@ export default function PostArrayProvider({ children }: React.PropsWithChildren)
         clientHTTP.getAllFriendPost(filter, pagination).then(page => {
             setPageNumber(page.pageable.pageNumber)
             setPageSize(page.pageable.pageSize)
+            console.log(page.content)
             if (cb) return cb(page.content);
             setPosts(page.content)
         })

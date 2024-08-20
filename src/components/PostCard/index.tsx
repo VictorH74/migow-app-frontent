@@ -2,178 +2,120 @@
 import React from 'react';
 import usePostCard, { PostCardProps } from "./usePostCard"
 import Image from 'next/image';
-import AddReactionIcon from '@mui/icons-material/AddReaction';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import ShareIcon from '@mui/icons-material/Share';
 import { SxProps } from '@mui/material';
 import CardContainer from '@/components/CardContainer';
 import CardHeader from '@/components/CardContainer/CardHeader';
 import CommentList from './CommentList';
 import { twMerge } from 'tailwind-merge';
-import IconButton from '../IconButton';
 import LoadingLazyComponent from '../LoadingLazyComponent';
-import CreateCommentInput from './CommentList/components/CreateCommentInput';
-import ReactionEmojiListWapper from '../ReactionEmojiListWapper';
+import PostProvider from '@/contexts/PostProvider';
+import PostBottomButtons from './PostBottomButtons';
+import FileSlide from '../FileSlide';
 
 
 const ReactionUserListModal = React.lazy(() => import('../ReactionUserListModal'))
 
 
-export default function PostCard({ showBottomActions = true, showBottomInf = true, ...props }: PostCardProps) {
-  const hook = usePostCard(props);
+export default function PostCard({ showBottomActions = true, showBottomInf = true, post, ...props }: PostCardProps) {
+  const hook = usePostCard();
 
-  const avatarSxProps: SxProps = props.sharedPost ? {
+  const avatarSxProps: SxProps = post.sharedPost != null ? {
     fontSize: 10,
     width: 25,
     height: 25,
   } : {}
 
   return (
-    <li className='w-[700px]'>
-      <CardContainer
-        className={`${props.fromPost ? "max-w-[700px] mx-auto" : " max-w-[780px]"} ${props.fromActivity ? "shadow-none" : ""}`}
-      >
-        {!props.fromActivity && (
-          <CardHeader
-            {...{ avatarSxProps }}
-            avatarImage={props.owner.profileImageUrl || props.owner.name}
-            heading={props.owner.username}
-            headingClassName={twMerge("font-semibold", props.sharedPost ? "text-sm" : "")}
-            href={"/in/profile/" + props.owner.username}
-            showDate={!props.sharedPost}
-            ISODate={props.createdAt}
-            showMenuButton={!props.sharedPost}
-            menuItemObjs={[
-              {
-                label: "Follow user",
-                onClick: () => { }
-              },
-              {
-                label: "Report post",
-                onClick: () => { }
-              },
-            ]}
-            leftComponents={
-              props.sharedPost && (<p className='ml-2'>shared the {props.sharedPost.owner.username}&apos;s post</p>)
-            }
-          />
-        )}
-
-        <div className='flex flex-col gap-2'>
-          <p className='px-4'>{props.text}</p>
-
-          {props.mediaURLs && !props.sharedPost && (
-            <Image width={780} height={300} className='h-fit w-fit m-auto max-h-[700px]' src={props.mediaURLs[0].src.toString()} alt='post midia' />
-          )}
-
-          {props.sharedPost && !props.mediaURLs && (
-            <>
-              <div className='bg-gray-500 h-[1px] mx-4' />
-              <PostCard
-                {...props.sharedPost}
-                fromPost
-                showBottomActions={!props.text}
-                showBottomInf={!props.text}
-              />
-            </>
-          )}
-
-          <div className='bg-gray-500 h-[1px] mx-4' />
-
-          {(showBottomActions || (!!props.sharedPost && !!props.text)) && (
-            <div className='flex justify-center gap-4 px-4 mt-2'>
-              {
-                [
-                  {
-                    Icon: AddReactionIcon,
-                    count: props.reactCount,
-                    countBtnOnClick: () => hook.setShowReactionUsersModal(true),
-                    countBtnDisabled: props.reactCount === 0,
-                    onClick: hook.createDeleteReaction,
-                    label: "Add Reaction",
-                    buttonLabelSegment: "reactions"
-                  },
-                  {
-                    Icon: AddCommentIcon,
-                    count: props.commentCount,
-                    countBtnOnClick: () => hook.setShowComments(true),
-                    countBtnDisabled: props.commentCount === 0 || hook.comments.length !== 0,
-                    onClick: () => hook.setShowComments(true),
-                    label: "Add Comment",
-                    buttonLabelSegment: "comments"
-                  },
-                  {
-                    Icon: ShareIcon,
-                    count: props.shareCount,
-                    countBtnOnClick: () => { },
-                    countBtnDisabled: true,
-                    onClick: () => { },
-                    label: "Share",
-                    buttonLabelSegment: "shares"
-                  },
-                ].map(btnData => (
-                  <div className='' key={btnData.label} >
-                    {btnData.label === "Add Reaction" ? (
-                      <ReactionEmojiListWapper onEmojiClick={hook.createUpdateReaction} >
-                        <IconButton
-                          Icon={btnData.Icon}
-                          onClick={btnData.onClick}
-                          label={btnData.label}
-                          labelClassName='font-semibold'
-                          direction='horizontal'
-                          isActive={!!props.currentUserReaction}
-                        />
-                      </ReactionEmojiListWapper>
-                    ) : (
-                      <IconButton
-
-                        Icon={btnData.Icon}
-                        onClick={btnData.onClick}
-                        label={btnData.label}
-                        labelClassName='font-semibold'
-                        direction='horizontal'
-                      />
-                    )}
-                    <button
-                      className='text-sm font-semibold text-center text-gray-600 hover:underline w-full'
-                      disabled={btnData.countBtnDisabled}
-                      onClick={btnData.countBtnOnClick}
-                    >
-                      {btnData.count} {btnData.buttonLabelSegment}
-                    </button>
-                  </div>
-                ))
+    <PostProvider {...post}>
+      <li className='w-[700px]'>
+        <CardContainer
+          className={`${props.fromPost ? "max-w-[700px] mx-auto" : " max-w-[780px]"} ${props.fromActivity ? "shadow-none" : ""}`}
+        >
+          {!props.fromActivity && (
+            <CardHeader
+              {...{ avatarSxProps }}
+              avatarImage={post.owner.profileImageUrl || post.owner.name}
+              heading={post.owner.username}
+              headingClassName={twMerge("font-semibold", post.sharedPost != null ? "text-sm" : "")}
+              href={"/in/profile/" + post.owner.username}
+              showDate={post.sharedPost == null}
+              ISODate={post.createdAt}
+              showMenuButton={post.sharedPost == null}
+              menuItemObjs={[
+                {
+                  label: "Follow user",
+                  onClick: () => { }
+                },
+                {
+                  label: "Report post",
+                  onClick: () => { }
+                },
+              ]}
+              leftComponents={
+                post.sharedPost != null && (<p className='ml-2'>shared the {post.sharedPost.owner.username}&apos;s post</p>)
               }
-            </div>
-          )}
-
-          <div className='px-4'>
-            <CreateCommentInput avatarSxProps={{ marginTop: 0.3 }} containerClassname='mb-2' newCommentFunc={hook.addNewComment} />
-            {hook.showComments && (
-              <CommentList
-                postId={props.id}
-                commentCount={props.commentCount}
-                comments={hook.comments}
-                highlightReplyComment={props.highlightReplyComment}
-                loadComments={hook.loadMoreComments}
-              />
-            )}
-          </div>
-
-
-
-
-        </div>
-        <React.Suspense fallback={<LoadingLazyComponent />}>
-          {hook.showReactionUsersModal && (
-            <ReactionUserListModal
-              target={`post_${props.id}`}
-              reactionTypeCounts={props.reactionTypeCounts}
-              onClose={() => hook.setShowReactionUsersModal(false)}
             />
           )}
-        </React.Suspense>
-      </CardContainer>
-    </li>
+
+          <div className='flex flex-col gap-2'>
+            <p className='px-4'>{post.text}</p>
+
+            {/* TODO: use FileSlide */}
+            {post.mediaList && post.mediaList.length > 0 && post.sharedPost == null && (
+              <FileSlide files={post.mediaList} />
+              // <Image width={780} height={300} className='h-fit w-fit m-auto max-h-[700px]' src={post.mediaList[0].url} alt='post midia' />
+            )}
+
+            {post.sharedPost != null && !post.mediaList && (
+              <>
+                <div className='bg-gray-500 h-[1px] mx-4' />
+                <PostCard
+                  fromPost
+                  post={post}
+                  showBottomActions={!post.text}
+                  showBottomInf={!post.text}
+                />
+              </>
+            )}
+
+            <div className='bg-gray-500 h-[1px] mx-4' />
+
+            {(showBottomActions || (post.sharedPost != null && !!post.text)) && (
+              <PostBottomButtons
+                currentPostUserReaction={post.currentUserReaction}
+                postCommentCount={post.commentCount}
+                postReactCount={post.reactCount}
+                postShareCount={post.shareCount}
+                setShowComments={hook.setShowComments}
+                setShowReactionUsersModal={hook.setShowReactionUsersModal}
+              />
+            )}
+
+            <div className='px-4'>
+              {hook.showComments && (
+                <CommentList
+                  postId={post.id}
+                  commentCount={post.commentCount}
+                // comments={hook.comments}
+                // highlightReplyComment={post.highlightReplyComment}
+                // loadComments={hook.loadMoreComments}
+                />
+              )}
+            </div>
+
+          </div>
+          <React.Suspense fallback={<LoadingLazyComponent />}>
+            {hook.showReactionUsersModal && (
+              <ReactionUserListModal
+                target={`post_${post.id}`}
+                reactionTypeCounts={post.reactionTypeCounts}
+                onClose={() => hook.setShowReactionUsersModal(false)}
+              />
+            )}
+          </React.Suspense>
+        </CardContainer>
+      </li>
+    </PostProvider>
+
   );
 }
