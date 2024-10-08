@@ -1,13 +1,13 @@
 export enum VisibilityEnum {
     PUBLIC = 1,
     FRIENDS = 2,
-    NOBODY = 3
+    NOBODY = 3,
 }
 
 export enum AccountPrefSetsTheme {
     LIGHT = 1,
     DARK = 2,
-    DEVICE = 3
+    DEVICE = 3,
 }
 
 export enum AccountPrefSetsOnlineUsersLimit {
@@ -16,16 +16,22 @@ export enum AccountPrefSetsOnlineUsersLimit {
 }
 
 export enum UserEventEnum {
-    COMMENT_REPLAY = 1,
-    NEW_POST = 2,
-    COMMENT_POST = 3,
+    NEW_POST = 1,
+    COMMENT_POST = 2,
+    REPLY_COMMENT = 3,
     REACT_COMMENT = 4,
     REACT_POST = 5,
-    SHARE_POST = 6
+    REACT_COMMENT_REPLY = 6,
+    SHARE_POST = 7,
 }
 
 export enum ReactionTypeEnum {
-    LIKE = 1, FUNNY = 2, LOVE = 3, SAD = 4, CUTE = 5, SCARY = 6
+    LIKE = 1,
+    FUNNY = 2,
+    LOVE = 3,
+    SAD = 4,
+    CUTE = 5,
+    SCARY = 6,
 }
 
 export enum FriendshipStatusEnum {

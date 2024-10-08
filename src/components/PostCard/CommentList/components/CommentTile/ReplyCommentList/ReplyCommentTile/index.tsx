@@ -1,21 +1,21 @@
-import Avatar from "@/components/Avatar";
-import DisplayISODate from "@/components/DisplayDate";
-import LoadingLazyComponent from "@/components/LoadingLazyComponent";
-import ReactionUserListModal from "@/components/ReactionUserListModal";
-import { CommentInterface } from "@/interfaces/Comment";
-import { SxProps } from "@mui/material";
-import Link from "next/link";
-import React from "react";
-import { replyCommentAvatarSxProps } from "../..";
+import Avatar from '@/components/Avatar';
+import DisplayISODate from '@/components/DisplayDate';
+import LoadingLazyComponent from '@/components/LoadingLazyComponent';
+import ReactionUserListModal from '@/components/ReactionUserListModal';
+import { CommentInterface } from '@/interfaces/Comment';
+import { SxProps } from '@mui/material';
+import Link from 'next/link';
+import React from 'react';
+import { replyCommentAvatarSxProps } from '../..';
 
-
-interface ReplyCommentTileProps extends CommentInterface.ReplyType { }
+interface ReplyCommentTileProps extends CommentInterface.ReplyType {}
 
 export default function ReplyCommentTile(props: ReplyCommentTileProps) {
-    const [showReactionUsersModal, setShowReactionUsersModal] = React.useState(false)
+    const [showReactionUsersModal, setShowReactionUsersModal] =
+        React.useState(false);
 
     return (
-        <li >
+        <li>
             <div className="flex">
                 <Avatar
                     image={props.owner.profileImageUrl || props.owner.name}
@@ -24,12 +24,15 @@ export default function ReplyCommentTile(props: ReplyCommentTileProps) {
                 <div className="w-full">
                     <div className="bg-gray-200 px-2 pb-2 rounded-md ">
                         <div className="flex items-center">
-                            <Link href={"/in/profile/" + props.owner.username} className="leading-[35px] font-semibold text-sm hover:underline" >
+                            <Link
+                                href={'/in/profile/' + props.owner.username}
+                                className="leading-[35px] font-semibold text-sm hover:underline"
+                            >
                                 {props.owner.username}
                             </Link>
                             <DisplayISODate ISODate={props.createdAt} />
                         </div>
-                        <p className="" >{props.content}</p>
+                        <p className="">{props.content}</p>
                     </div>
 
                     <div className="border flex items-center gap-1 text-sm">
@@ -49,11 +52,11 @@ export default function ReplyCommentTile(props: ReplyCommentTileProps) {
                 {showReactionUsersModal && (
                     <ReactionUserListModal
                         target={`comment_reply_${props.id}`}
-                        reactionTypeCounts={props.reactionTypeCounts}
+                        reactionCountByType={props.reactionCountByType}
                         onClose={() => setShowReactionUsersModal(false)}
                     />
                 )}
             </React.Suspense>
         </li>
-    )
+    );
 }

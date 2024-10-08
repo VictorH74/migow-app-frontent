@@ -1,30 +1,29 @@
-import Avatar from "@/components/Avatar";
-import useCommentTile, { CommentTileProps } from "./useCommentTile";
-import { SxProps } from "@mui/material";
-import DisplayISODate from "@/components/DisplayDate";
-import Link from "next/link";
-import ReplyCommentList from "./ReplyCommentList";
-import React from "react";
-import LoadingLazyComponent from "@/components/LoadingLazyComponent";
-import ReactionUserListModal from "@/components/ReactionUserListModal";
-import CreateCommentInput from "../CreateCommentInput";
-import CreateReplyCommentTile from "../CreateReplyCommentTile";
-
+import Avatar from '@/components/Avatar';
+import useCommentTile, { CommentTileProps } from './useCommentTile';
+import { SxProps } from '@mui/material';
+import DisplayISODate from '@/components/DisplayDate';
+import Link from 'next/link';
+import ReplyCommentList from './ReplyCommentList';
+import React from 'react';
+import LoadingLazyComponent from '@/components/LoadingLazyComponent';
+import ReactionUserListModal from '@/components/ReactionUserListModal';
+import CreateCommentInput from '../CreateCommentInput';
+import CreateReplyCommentTile from '../CreateReplyCommentTile';
 
 const commentAvatarSxProps: SxProps = {
     width: 35,
     height: 35,
-    fontSize: 15
-}
+    fontSize: 15,
+};
 
 export const replyCommentAvatarSxProps: SxProps = {
     width: 30,
     height: 30,
-    fontSize: 13
-}
+    fontSize: 13,
+};
 
 export default function CommentTile(props: CommentTileProps) {
-    const hook = useCommentTile(props)
+    const hook = useCommentTile(props);
 
     return (
         <li>
@@ -36,7 +35,10 @@ export default function CommentTile(props: CommentTileProps) {
                 <div className="w-full">
                     <div className="bg-gray-200 px-2 pb-2 rounded-md ">
                         <div className="flex items-center">
-                            <Link href={"/in/profile/" + props.owner.username} className="leading-[35px] font-semibold hover:underline">
+                            <Link
+                                href={'/in/profile/' + props.owner.username}
+                                className="leading-[35px] font-semibold hover:underline"
+                            >
                                 {props.owner.username}
                             </Link>
                             <DisplayISODate ISODate={props.createdAt} />
@@ -45,11 +47,7 @@ export default function CommentTile(props: CommentTileProps) {
                     </div>
 
                     <div className="flex items-center gap-1 text-sm">
-                        <button
-                            className="hover:underline"
-                        >
-                            React
-                        </button>
+                        <button className="hover:underline">React</button>
                         <div className="size-1 rounded-full bg-gray-500" />
                         <button
                             onClick={() => hook.setShowReactionUsersModal(true)}
@@ -77,42 +75,37 @@ export default function CommentTile(props: CommentTileProps) {
                         </button>
                     </div>
                 </div>
-
             </div>
 
-
-
             <div className="pl-[40px]">
-                {
-                    hook.showReplyInput && (
-                        <CreateReplyCommentTile
-                            avatarSxProps={{...replyCommentAvatarSxProps, marginTop: 0.5}}
-                            containerClassname="mt-2"
-                            createReplyFunc={hook.createReply}
-                        />
-                    )
-                }
+                {hook.showReplyInput && (
+                    <CreateReplyCommentTile
+                        avatarSxProps={{
+                            ...replyCommentAvatarSxProps,
+                            marginTop: 0.5,
+                        }}
+                        containerClassname="mt-2"
+                        createReplyFunc={hook.createReply}
+                    />
+                )}
                 {hook.showReplyComments && (
                     <ReplyCommentList
                         commentId={props.id}
                         replyComments={hook.replyComments}
-                        // highlightReplyComment={props.highlightReplyComment}
                         loadReplyComments={hook.loadMoreReplyComments}
                     />
                 )}
             </div>
 
-
-
             <React.Suspense fallback={<LoadingLazyComponent />}>
                 {hook.showReactionUsersModal && (
                     <ReactionUserListModal
                         target={`comment_${props.id}`}
-                        reactionTypeCounts={props.reactionTypeCounts}
+                        reactionCountByType={props.reactionCountByType}
                         onClose={() => hook.setShowReactionUsersModal(false)}
                     />
                 )}
             </React.Suspense>
         </li>
-    )
+    );
 }

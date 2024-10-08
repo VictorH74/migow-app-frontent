@@ -3,8 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
 import { cookies } from "next/headers";
-import ClientHTTPProvider from "@/contexts/ClientHTTPProvider";
-import ClientGlobalProviders from "@/components/ClientGlobalProviders";
+import GlobalProviders from "@/components/GlobalProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +21,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <ClientGlobalProviders recoveredToken={ownerToken?.value} >
+      <GlobalProviders recoveredToken={ownerToken?.value} >
         <body className={twMerge("bg-[#EFEFEF]", inter.className)}>{children}</body>
-      </ClientGlobalProviders>
+      </GlobalProviders>
     </html>
   );
 }
