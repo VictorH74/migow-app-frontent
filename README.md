@@ -13,6 +13,13 @@ Migow é uma rede social criada com Nextjs, TypeScript, Spring Boot e Java. O de
 - Notificações
 - Configurações de conta, privacidade e notificações
 
+## Micro-services repositories
+
+- [migow_api_gateway_service](https://github.com/VictorH74/migow_api_gateway_service)
+- [migow-app-users-service](https://github.com/VictorH74/migow-app-users-service)
+- [migow-app-posts-service](https://github.com/VictorH74/migow-app-posts-service)
+- [migow-app-user-events-service](https://github.com/VictorH74/migow-app-user-events-service)
+
 ## Páginas e componentes
 
 - Register Page: onde o usuário efetuará o cadastro da conta
